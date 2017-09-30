@@ -1,5 +1,6 @@
 import os
 import time
+import psycopg2
 from slackclient import SlackClient
 
 
@@ -47,8 +48,32 @@ def parse_slack_output(slack_rtm_output):
                        output['channel']
     return None, None
 
+def database_connection():
+    # Define our connection string
+    db_string_connection = "host='localhost' dbname='smartfridge' user='postgres' password='postgres'"
+
+    # print the connection string we will use to connect
+    print('Connecting to database ... {}'.format(db_string_connection))
+
+    # get a connection, if a connect cannot be made an exception will be raised here
+    db_conn = psycopg2.connect(db_string_connection)
+
+    # conn.cursor will return a cursor object, you can use this cursor to perform queries
+    database_cursor = db_conn.cursor()
+
+    # execute our Query
+    database_cursor.execute("SELECT name FROM products")
+
+    # retrieve the records from the database
+    records = database_cursor.fetchall()
+
+    print(records)
+
 
 if __name__ == "__main__":
+
+    database_connection()
+
     READ_WEBSOCKET_DELAY = 1 # 1 second delay between reading from firehose
     if slack_client.rtm_connect():
         print("smartfridge connected and running!")
