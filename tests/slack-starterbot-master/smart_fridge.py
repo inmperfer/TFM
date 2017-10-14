@@ -2,9 +2,16 @@ import os
 import time
 import psycopg2
 from slackclient import SlackClient
+import requests
+import urllib.request
+import json
+
 
 # smartfridge's ID as an environment variable
 BOT_ID = os.environ.get("BOT_ID")
+
+# Get key to request Food2fork API
+FOOD2FORK_KEY=os.environ.get('FOOD2FORK_KEY')
 
 # constants
 AT_BOT = "<@" + BOT_ID + ">"
@@ -15,8 +22,9 @@ db_string_connection = "host='localhost' dbname='smartfridge' user='postgres' pa
 
 class SmartFridge():
     def __init__(self):
-        #  instantiate Slack & Twilio clients
+        #  instantiate Slack
         self.slack_client = SlackClient(os.environ.get('SLACK_BOT_TOKEN'))
+        self.food2fork_key = FOOD2FORK_KEY
         self.database_cursor = None
 
 
@@ -57,6 +65,8 @@ class SmartFridge():
         output_list = slack_rtm_output
         if output_list and len(output_list) > 0:
             for output in output_list:
+                if output and 'text' in output:
+                    print(output['text'])
                 if output and 'text' in output and AT_BOT in output['text']:
                     # return text after the @ mention, whitespace removed
                     return output['text'].split(AT_BOT)[1].strip().lower(), \
@@ -73,12 +83,33 @@ class SmartFridge():
         # conn.cursor will return a cursor object, you can use this cursor to perform queries
         self.database_cursor = db_conn.cursor()
 
+    def _urlHelper(self, endpoint, **kwargs):
+        data = {'key': self.food2fork_key}
 
+        for key, value in kwargs.items():
+            data[key] = value
+
+        return endpoint + '?' + urllib.parse.urlencode(data)
+
+
+    def recipes_by_ingredients(self, query):
+        endpoint = 'http://food2fork.com/api/search'
+        url = self._urlHelper(endpoint, q=query)
+        print(url)
+        return requests.get(url).json()
 
 
 if __name__ == "__main__":
     smartfridge=SmartFridge()
     smartfridge.database_connection()
+
+    ingredients='chicken, tomatoes, cheese, onion, egg'
+    recipes=smartfridge.recipes_by_ingredients(ingredients)['recipes']
+
+    for i, recipe in enumerate(recipes):
+        print('[{0}] : {1}'.format(i+1, recipe['title']))
+
+
 
     READ_WEBSOCKET_DELAY = 1 # 1 second delay between reading from firehose
     if smartfridge.slack_client.rtm_connect():
