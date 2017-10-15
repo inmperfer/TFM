@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# coding=utf-8
+
 import os
 import time
 import psycopg2
@@ -6,7 +9,7 @@ import requests
 import urllib.request
 import json
 
-
+from watson_developer_cloud import VisualRecognitionV3
 
 # smartfridge's ID as an environment variable
 BOT_ID = os.environ.get("BOT_ID")
@@ -23,12 +26,20 @@ EXAMPLE_COMMAND = "do"
 # Define our connection string
 db_string_connection = "host='localhost' dbname='smartfridge' user='postgres' password='postgres'"
 
+
+VISUAL_RECOGNITION_VERSION = '2017-10-15'
+VISUAL_RECOGNITION_URL = 'https://gateway-a.watsonplatform.net/visual-recognition/api'
+VISUAL_RECOGNITION_KEY = os.environ.get('VISUAL_RECOGNITION_KEY')
+
 class SmartFridge():
     def __init__(self):
         #  instantiate Slack
         self.slack_client = SlackClient(SLACK_BOT_TOKEN)
         self.food2fork_key = FOOD2FORK_KEY
         self.database_cursor = None
+        self.visual_recognition = VisualRecognitionV3(version=VISUAL_RECOGNITION_VERSION,
+                                                      url=VISUAL_RECOGNITION_URL,
+                                                      api_key=VISUAL_RECOGNITION_KEY)
 
 
     def getdbinformation(self):
@@ -49,7 +60,6 @@ class SmartFridge():
             are valid commands. If so, then acts on the commands. If not,
             returns back what it needs for clarification.
         """
-        print('handle_command')
         response = "Not sure what you mean. Use the *" + EXAMPLE_COMMAND + \
                "* command with numbers, delimited by spaces."
 
@@ -58,6 +68,8 @@ class SmartFridge():
             response = "Sure...write some more code then I can do that!"
         elif command.startswith('db'):
             response=self.getdbinformation()
+        elif command.startswith('photo'):
+            response='food picture to processing...'
 
         # Provide response
         self.slack_client.api_call("chat.postMessage", channel=channel,
@@ -74,15 +86,21 @@ class SmartFridge():
         output_list = slack_rtm_output
         if output_list and len(output_list) > 0:
             for output in output_list:
-                if output and 'text' in output:
-                    down_url=output['file']['url_private_download']
-                    print(down_url)
-                    smartfridge.download_file(down_url,'download/test_download2.png', 'download')
-
                 if output and 'text' in output and AT_BOT in output['text']:
                     # return text after the @ mention, whitespace removed
-                    return output['text'].split(AT_BOT)[1].strip().lower(), \
-                           output['channel']
+                    return output['text'].split(AT_BOT)[1].strip().lower(), output['channel']
+
+                elif output and 'file' in output and 'url_private_download' in output['file']:
+                    down_url = output['file']['url_private_download']
+                    self.download_file(down_url, 'download/food.jpg', 'download')
+
+                    with open('./download/food.jpg', 'rb') as image_file:
+                        vr_response = smartfridge.visual_recognition.classify(images_file=image_file,
+                                                                              classifier_ids=['food', 'default'])
+
+                        print('RESPUESTA VISUAL RECOGNITION {}'.format(json.dumps(vr_response, indent=2)))
+                    return 'photo', output['channel']
+
         return None, None
 
 
