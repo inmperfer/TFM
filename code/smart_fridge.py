@@ -83,9 +83,9 @@ class SmartFridge():
                         if classifier['classes'] and len(classifier['classes'])>0:
                             food=classifier['classes'][0]['class']
                             score=classifier['classes'][0]['score']
-                            response='Uhm... This is {0} (score: {1})'.format(food, score)
+                            response='Uhm... This looks really good. I think it is... {0} (score: {1})'.format(food, score)
                             response=response + '\n' + smartfridge.get_ingredients(smartfridge.get_recipe_id(food))
-                            
+
 
         # Provide response
         self.slack_client.api_call("chat.postMessage",
@@ -172,10 +172,10 @@ class SmartFridge():
         recipe=self.get_recipe_from_id(recipeId)
         if recipe and 'recipe' in recipe:
             ingredients=[]
-            source = 'Source URL: {}'.format(recipe['recipe']['source_url'])
+            source = '\nYou can find the method of cooking here: {}'.format(recipe['recipe']['source_url'])
             for ingredient in (recipe['recipe']['ingredients']):
                 ingredients.append(ingredient)
-                str_ingredients='Ingredients:' + '\n{}'.format('\n'.join(map(str, ingredients)))
+                str_ingredients= '\nBelow the ingredients of this dish:' + '\n\n   - {}'.format('\n    - '.join(map(str, ingredients)))
             return (str_ingredients + '\n' + source)
 
 
