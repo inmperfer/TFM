@@ -7,11 +7,14 @@ import urllib.request
 import json
 
 
+
 # smartfridge's ID as an environment variable
 BOT_ID = os.environ.get("BOT_ID")
 
 # Get key to request Food2fork API
 FOOD2FORK_KEY=os.environ.get('FOOD2FORK_KEY')
+
+SLACK_BOT_TOKEN=os.environ.get('SLACK_BOT_TOKEN')
 
 # constants
 AT_BOT = "<@" + BOT_ID + ">"
@@ -23,7 +26,7 @@ db_string_connection = "host='localhost' dbname='smartfridge' user='postgres' pa
 class SmartFridge():
     def __init__(self):
         #  instantiate Slack
-        self.slack_client = SlackClient(os.environ.get('SLACK_BOT_TOKEN'))
+        self.slack_client = SlackClient(SLACK_BOT_TOKEN)
         self.food2fork_key = FOOD2FORK_KEY
         self.database_cursor = None
 
@@ -34,8 +37,10 @@ class SmartFridge():
 
         # retrieve the records from the database
         records = self.database_cursor.fetchall()
-
-        return(records)
+        ingredients_fridge=[]
+        for r in records:
+            ingredients_fridge.append(r[0])
+        return(','.join(map(str, ingredients_fridge)))
 
 
     def handle_command(self, command, channel):
@@ -47,10 +52,14 @@ class SmartFridge():
         print('handle_command')
         response = "Not sure what you mean. Use the *" + EXAMPLE_COMMAND + \
                "* command with numbers, delimited by spaces."
+
+        # Get the command to the user (Ojo! sustituir por llamada a Watson conversation)
         if command.startswith('do'):
             response = "Sure...write some more code then I can do that!"
         elif command.startswith('db'):
             response=self.getdbinformation()
+
+        # Provide response
         self.slack_client.api_call("chat.postMessage", channel=channel,
                           text=response, as_user=True)
 
@@ -66,12 +75,17 @@ class SmartFridge():
         if output_list and len(output_list) > 0:
             for output in output_list:
                 if output and 'text' in output:
-                    print(output['text'])
+                    down_url=output['file']['url_private_download']
+                    print(down_url)
+                    smartfridge.download_file(down_url,'download/test_download2.png', 'download')
+
                 if output and 'text' in output and AT_BOT in output['text']:
                     # return text after the @ mention, whitespace removed
                     return output['text'].split(AT_BOT)[1].strip().lower(), \
                            output['channel']
         return None, None
+
+
 
     def database_connection(self):
         # print the connection string we will use to connect
@@ -99,6 +113,24 @@ class SmartFridge():
         return requests.get(url).json()
 
 
+    def download_file(self, url, local_filename, basedir):
+        try:
+            os.stat(basedir)
+        except:
+            os.mkdir(basedir)
+        try:
+            print('Savigng to {}'.format(local_filename))
+            headers = {'Authorization': 'Bearer '+ os.environ.get('SLACK_BOT_TOKEN')}
+            r = requests.get(url, headers=headers)
+            with open(local_filename, 'wb') as f:
+                for chunk in r.iter_content(chunk_size=1024):
+                    if chunk:
+                        f.write(chunk)
+        except:
+            return False
+
+        return True
+
 if __name__ == "__main__":
     smartfridge=SmartFridge()
     smartfridge.database_connection()
@@ -108,7 +140,6 @@ if __name__ == "__main__":
 
     for i, recipe in enumerate(recipes):
         print('[{0}] : {1}'.format(i+1, recipe['title']))
-
 
 
     READ_WEBSOCKET_DELAY = 1 # 1 second delay between reading from firehose
