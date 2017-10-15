@@ -69,11 +69,24 @@ class SmartFridge():
         elif command.startswith('db'):
             response=self.getdbinformation()
         elif command.startswith('photo'):
-            response='food picture to processing...'
+            with open('./download/food.jpg', 'rb') as image_file:
+                vr_response = smartfridge.visual_recognition.classify(images_file=image_file,
+                                                                      classifier_ids=['food'])
+
+                if vr_response['images'] and len(vr_response['images'])>0:
+                    image= vr_response['images'][0]
+                    if image['classifiers'] and len(image['classifiers'])>0:
+                        classifier=image['classifiers'][0]
+                        if classifier['classes'] and len(classifier['classes'])>0:
+                            food=classifier['classes'][0]['class']
+                            score=classifier['classes'][0]['score']
+                            response='This is... {0} (score: {1})'.format(food, score)
 
         # Provide response
-        self.slack_client.api_call("chat.postMessage", channel=channel,
-                          text=response, as_user=True)
+        self.slack_client.api_call("chat.postMessage",
+                                   channel=channel,
+                                   text=response,
+                                   as_user=True)
 
 
     def parse_slack_output(self, slack_rtm_output):
@@ -93,12 +106,6 @@ class SmartFridge():
                 elif output and 'file' in output and 'url_private_download' in output['file']:
                     down_url = output['file']['url_private_download']
                     self.download_file(down_url, 'download/food.jpg', 'download')
-
-                    with open('./download/food.jpg', 'rb') as image_file:
-                        vr_response = smartfridge.visual_recognition.classify(images_file=image_file,
-                                                                              classifier_ids=['food', 'default'])
-
-                        print('RESPUESTA VISUAL RECOGNITION {}'.format(json.dumps(vr_response, indent=2)))
                     return 'photo', output['channel']
 
         return None, None
