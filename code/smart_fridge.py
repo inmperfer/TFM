@@ -4,34 +4,36 @@
 import os
 import time
 import psycopg2
-from slackclient import SlackClient
 import requests
 import urllib.request
 import json
-
+from slackclient import SlackClient
 from watson_developer_cloud import VisualRecognitionV3
+
+######   CONSTANTS ########
 
 # smartfridge's ID as an environment variable
 BOT_ID = os.environ.get("BOT_ID")
 
-# Get key to request Food2fork API
-FOOD2FORK_KEY=os.environ.get('FOOD2FORK_KEY')
-
 SLACK_BOT_TOKEN=os.environ.get('SLACK_BOT_TOKEN')
 
-# constants
 AT_BOT = "<@" + BOT_ID + ">"
-EXAMPLE_COMMAND = "do"
-
-# Define our connection string
-DB_STRING_CONNECTION = "host='localhost' dbname='smartfridge' user='postgres' password='postgres'"
 
 # 1 second delay between reading from firehose
 READ_WEBSOCKET_DELAY = 1
 
+# Get key to request Food2fork API
+FOOD2FORK_KEY=os.environ.get('FOOD2FORK_KEY')
+
+# Define our connection string
+DB_STRING_CONNECTION = "host='localhost' dbname='smartfridge' user='postgres' password='postgres'"
+
 VISUAL_RECOGNITION_VERSION = '2017-10-15'
 VISUAL_RECOGNITION_URL = 'https://gateway-a.watsonplatform.net/visual-recognition/api'
 VISUAL_RECOGNITION_KEY = os.environ.get('VISUAL_RECOGNITION_KEY')
+
+
+
 
 class SmartFridge():
     def __init__(self):
@@ -54,7 +56,7 @@ class SmartFridge():
         ingredients_fridge=[]
         for r in records:
             ingredients_fridge.append(r[0])
-        return(','.join(map(str, ingredients_fridge)))
+        return(ingredients_fridge)
 
 
     def handle_command(self, command, channel):
@@ -63,14 +65,13 @@ class SmartFridge():
             are valid commands. If so, then acts on the commands. If not,
             returns back what it needs for clarification.
         """
-        response = "Not sure what you mean. Use the *" + EXAMPLE_COMMAND + \
-               "* command with numbers, delimited by spaces."
+        response = "Not sure what you mean. Use the * do * command with numbers, delimited by spaces."
 
         # Get the command to the user (Ojo! sustituir por llamada a Watson conversation)
         if command.startswith('do'):
             response = "Sure...write some more code then I can do that!"
         elif command.startswith('db'):
-            response=self.get_db_information()
+            response=','.join(map(str, self.get_db_information()))
         elif command.startswith('photo'):
             with open('./download/food.jpg', 'rb') as image_file:
                 vr_response = smartfridge.visual_recognition.classify(images_file=image_file,
@@ -83,7 +84,7 @@ class SmartFridge():
                         if classifier['classes'] and len(classifier['classes'])>0:
                             food=classifier['classes'][0]['class']
                             score=classifier['classes'][0]['score']
-                            response='Uhm... This looks really good. I think it is... {0} (score: {1})'.format(food, score)
+                            response='Uhm... :yum: :yum: :yum: This looks really good. I think (score: {1}) it is... *{0}*'.format(food, score)
                             response=response + '\n' + smartfridge.get_ingredients(smartfridge.get_recipe_id(food))
 
 
@@ -153,7 +154,7 @@ class SmartFridge():
 
         return True
 
-    #######   FOOD2FORK    #######
+#######   FOOD2FORK    #######
     def search_recipes(self, query):
         endpoint = 'http://food2fork.com/api/search'
         url = self._urlHelper(endpoint, q=query)
@@ -172,10 +173,10 @@ class SmartFridge():
         recipe=self.get_recipe_from_id(recipeId)
         if recipe and 'recipe' in recipe:
             ingredients=[]
-            source = '\nYou can find the method of cooking here: {}'.format(recipe['recipe']['source_url'])
+            source = '\nHere, you can find the *method of cooking*: {}'.format(recipe['recipe']['source_url'])
             for ingredient in (recipe['recipe']['ingredients']):
                 ingredients.append(ingredient)
-                str_ingredients= '\nBelow the ingredients of this dish:' + '\n\n   - {}'.format('\n    - '.join(map(str, ingredients)))
+                str_ingredients= '\nTo cook this dish you need the following *ingredients*:' + '\n\n   - {}'.format('\n    - '.join(map(str, ingredients)))
             return (str_ingredients + '\n' + source)
 
 
@@ -192,8 +193,16 @@ class SmartFridge():
         else:
             return None
 
+    def get_recipes_from_database(self):
+        recipe_ids=[]
+        db_products=self.get_db_information()
+        for product in db_products:
+            id=self.get_recipe_id(product)
+            if id not in recipe_ids:
+                recipe_ids.append(id)
 
 
+####   MAIN  ####
 if __name__ == "__main__":
     smartfridge=SmartFridge()
     smartfridge.database_connection()
