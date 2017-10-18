@@ -1,0 +1,77 @@
+capabilities_subject,date,date,day,month,the date,what date,year
+capabilities_subject,time,hour,minutes,seconds,the time,time,what time
+cuisine,burgers,burger,burgers,cheeseburger,cheese burger,cheeseburgers,cheese burgers,hamburger,ham burger,hamburgers,ham burgers,mcdonalds,mcdonald's
+cuisine,pasta,calzone,canneloni,fettucine,Italian,pasta,pizza,pizzas,ravioli,spaghetti
+cuisine,seafood,fish,prawns,seafood,shrimp
+cuisine,tacos,burrito,burritos,Mexican,taco,tacos
+cuisine_bad,african
+cuisine_bad,american
+cuisine_bad,argentine
+cuisine_bad,asian
+cuisine_bad,austrian
+cuisine_bad,basque
+cuisine_bad,belgian
+cuisine_bad,breakfast
+cuisine_bad,british,bangers and mash,pies
+cuisine_bad,cajun
+cuisine_bad,californian
+cuisine_bad,canadian
+cuisine_bad,caribbean
+cuisine_bad,chinese
+cuisine_bad,christmas
+cuisine_bad,comfort
+cuisine_bad,creole
+cuisine_bad,cuban
+cuisine_bad,danish
+cuisine_bad,english
+cuisine_bad,european
+cuisine_bad,french
+cuisine_bad,galician
+cuisine_bad,german
+cuisine_bad,gluten free
+cuisine_bad,greek
+cuisine_bad,halal
+cuisine_bad,hawaiian
+cuisine_bad,indian
+cuisine_bad,irish
+cuisine_bad,israeli
+cuisine_bad,jamaican
+cuisine_bad,japanese
+cuisine_bad,korean
+cuisine_bad,kosher
+cuisine_bad,latin
+cuisine_bad,lebanese
+cuisine_bad,malaysian
+cuisine_bad,mediterranean
+cuisine_bad,middle eastern
+cuisine_bad,moroccan
+cuisine_bad,paleo
+cuisine_bad,persian
+cuisine_bad,peruvian
+cuisine_bad,pescatarian
+cuisine_bad,portuguese
+cuisine_bad,russian
+cuisine_bad,scandinavian
+cuisine_bad,scottish
+cuisine_bad,sichuan
+cuisine_bad,soul
+cuisine_bad,southern
+cuisine_bad,southwestern
+cuisine_bad,spanish
+cuisine_bad,sushi
+cuisine_bad,texan
+cuisine_bad,tex mex
+cuisine_bad,thai
+cuisine_bad,turkish
+cuisine_bad,tuscan
+cuisine_bad,vegan
+cuisine_bad,vegetarian
+cuisine_bad,vietnamese
+option,fifth,5th,farthest,fifth,last,lowest rated,worst
+option,first,1st,any,best,closeby,close by,closest,finest, first,hgihest rated,near,nearby,nearest,recommended,top rated,whatever
+option,fourth,4th,fourth,penultimate,second to last
+option,second,2nd, second,second best,second rated
+option,third,3rd,average,cheap,cheapest,middle, third
+response_types,negative,definitely not,no,nope,not at all,no way
+response_types,positive,absolutely,definitely,yeah,yep,yeppers,yes
+response_types,uncertain,don't know,maybe,no idea,not sure,unknown
