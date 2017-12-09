@@ -1,0 +1,390 @@
+hey,about_VA
+how much do you weigh,about_VA
+how old are you,about_VA
+how tall are you,about_VA
+i want jokes,about_VA
+I want to date you,about_VA
+know any jokes,about_VA
+tell me your favorite color,about_VA
+what are you called,about_VA
+what do i call you,about_VA
+what is your favourite colour,about_VA
+what is your favourite music,about_VA
+what is your name,about_VA
+what music do you like,about_VA
+your name,about_VA
+what's your,about_VA
+what's your favorite,about_VA
+whats your favorite color,about_VA
+whats your favorite movie,about_VA
+what's your name,about_VA
+whats your name,about_VA
+what types of food do you like,about_VA
+when were you born,about_VA
+do you hate,about_VA
+Do you like,about_VA
+do you love,about_VA
+let's see! what do we have for today?,available_ingredients
+what ingredients do we have?,available_ingredients
+make me a summary of what I have,available_ingredients
+tell me what ingredients I have in the fridge,available_ingredients
+I have something to cook?,available_ingredients
+I have something to eat?,available_ingredients
+I have eaten everything already?,available_ingredients
+Is there something in the fridge?,available_ingredients
+What can I cook with today?,available_ingredients
+What is still left?,available_ingredients
+What do I have in the fridge?,available_ingredients
+what are your capabilities Watson,capabilities
+what else,capabilities
+what do you know,capabilities
+What do you have,capabilities
+what do you have?,capabilities
+what did you learn,capabilities
+what care you capablities,capabilities
+what capabilities you have,capabilities
+what can you help me with,capabilities
+what can you do for me,capabilities
+what canyou do,capabilities
+what can you do,capabilities
+What can i say,capabilities
+what can I do,capabilities
+What ca I ask?,capabilities
+What are your functions?,capabilities
+what are your benefits,capabilities
+What are you,capabilities
+tell me what you can do,capabilities
+Tell me what to do.,capabilities
+tell me what things you can do,capabilities
+tell me some jokes,capabilities
+tell me jokes,capabilities
+tell me joke,capabilities
+tell me a joke,capabilities
+so what did you learn?,capabilities
+but can I ask you,capabilities
+can I manipulate the,capabilities
+Can I teach you,capabilities
+can i training you?,capabilities
+can u please do that,capabilities
+can you direct me please?,capabilities
+Can you do anything that helps me drive?,capabilities
+can you do coding ?,capabilities
+can you do it?,capabilities
+can you do more than that?,capabilities
+CAN YOU DO OTHER THING?,capabilities
+can you do this?,capabilities
+Can you drive anywhere else?,capabilities
+can you harm me?,capabilities
+Can you hear me?,capabilities
+can you learn something new?,capabilities
+can you read me,capabilities
+can you speak something with me?,capabilities
+do you do anything else,capabilities
+Do you do anything else?,capabilities
+do you know something about cognitive?,capabilities
+Hello can i have some help,capabilities
+help,capabilities
+help me,capabilities
+Hi! what could you do ?,capabilities
+hi where am i,capabilities
+How are you going to help me,capabilities
+how can you help me,capabilities
+how close is,capabilities
+ok watson,capabilities
+need help,capabilities
+lets go,capabilities
+i want to see how this demo works,capabilities
+why should I use you,capabilities
+what things can you do,capabilities
+what should i ask,capabilities
+what question,capabilities
+What makes you different from Siri or Google,capabilities
+what are you capable of,capabilities
+no thank,decision_replies
+not a clue,decision_replies
+no,decision_replies
+maybe,decision_replies
+yes,decision_replies
+yes definitely,decision_replies
+yes please,decision_replies
+yes thanks,decision_replies
+no thanks watson,decision_replies
+No thank you,decision_replies
+You know how to cook this,get_recipe
+You know how this is cooked?,get_recipe
+what this,get_recipe
+What if today like this,get_recipe
+What do you think about cooking this,get_recipe
+"Watson, tell me how to do",get_recipe
+this dish,get_recipe
+Tell me how to cook this,get_recipe
+Look how good it looks!,get_recipe
+look for this recipe for this,get_recipe
+Look at this picture,get_recipe
+look at,get_recipe
+I would love to eat this,get_recipe
+I send you a photo,get_recipe
+I see this,get_recipe
+I have seen this dish in instagram,get_recipe
+I have seen this dish,get_recipe
+How cook,get_recipe
+how can I do this?,get_recipe
+Give me the recipe for this,get_recipe
+Find me this,get_recipe
+Do you know what this is?,get_recipe
+Do you know how to cook this?,get_recipe
+should go,goodbyes
+should be going,goodbyes
+see you,goodbyes
+see ya soon,goodbyes
+see ya later,goodbyes
+see ya,goodbyes
+run,goodbyes
+over and out,goodbyes
+out of time,goodbyes
+hey stop here,goodbyes
+toodles,goodbyes
+then bye,goodbyes
+thanks byebye,goodbyes
+swag out,goodbyes
+no,goodbyes
+nice day,goodbyes
+my time is up,goodbyes
+logging off,goodbyes
+leave,goodbyes
+laters,goodbyes
+later,goodbyes
+i said goodbye,goodbyes
+I'm leaving,goodbyes
+ok bye,goodbyes
+Have a nice day,goodbyes
+gotta run,goodbyes
+gotta go,goodbyes
+good night,goodbyes
+good day,goodbyes
+good bye,goodbyes
+goodbye,goodbyes
+going,goodbyes
+go,goodbyes
+farewell,goodbyes
+cya,goodbyes
+bye now,goodbyes
+bye bye,goodbyes
+bye,goodbyes
+au revoir,goodbyes
+adios,goodbyes
+adieu,goodbyes
+soon,goodbyes
+so long,goodbyes
+signing out,goodbyes
+signing off,goodbyes
+shut down,goodbyes
+shutdown,goodbyes
+hola como estas,greetings
+How are you doing,greetings
+howdy,greetings
+yo my man,greetings
+yo,greetings
+yello,greetings
+What's up?,greetings
+What's up ?,greetings
+What's up,greetings
+what r u doing,greetings
+what doing,greetings
+say hello to me,greetings
+I would like you to say hello,greetings
+ciao,greetings
+buenos dias,greetings
+buenas dias,greetings
+bonjour,greetings
+aloha,greetings
+fdsafsaHi watson,greetings
+feeling bit low,greetings
+good,greetings
+g'day,greetings
+Good afternoon.,greetings
+good day,greetings
+good evening,greetings
+good how are you,greetings
+good morning,greetings
+greetings,greetings
+Hello,greetings
+Hello Watson,greetings
+hey,greetings
+heya,greetings
+hey there,greetings
+hi how are u,greetings
+hi there,greetings
+hi to whom had like,greetings
+Hi watson,greetings
+Hi,greetings
+hiya,greetings
+Hola,greetings
+eo,greetings
+halo,greetings
+can i training you?,improving_system
+can i teach you something new,improving_system
+Can I teach you,improving_system
+can i improve your system,improving_system
+how do i teach you,improving_system
+can you learn from me,improving_system
+can you learn new things,improving_system
+what languages do you know,interface
+tell me,interface
+slow down the speech,interface
+I want to talk,interface
+hello can you hear me?,interface
+do you speak languages other than english,interface
+do you know non-english languages,interface
+can you speak something with me?,interface
+can you read me,interface
+can you interact in other languages,interface
+Can you hear me?,interface
+Can i ask you something in spanish?,interface
+I would love to eat this,look
+put up with it,negative_reaction
+What good are you anyway?,negative_reaction
+when will you die,negative_reaction
+You are bad,negative_reaction
+You are rubbish,negative_reaction
+you are useless,negative_reaction
+You don't know anything,negative_reaction
+You're asking me too much,negative_reaction
+Get out of my car!,negative_reaction
+are you dead yet,negative_reaction
+bad,negative_reaction
+can you understand me,negative_reaction
+die,negative_reaction
+go and fuck you off,negative_reaction
+Let me out!,negative_reaction
+I didn't say anything about weather.,negative_reaction
+i dont want u to do anything,negative_reaction
+Its not that good,negative_reaction
+i want you to die,negative_reaction
+let me out,negative_reaction
+go **** yourself,negative_reaction
+I don't see any,not_specified
+I don't see any options,not_specified
+I don't see anything,not_specified
+no preference,not_specified
+whatever,not_specified
+you decide,not_specified
+you can go with your favorite,not_specified
+Whatever you like,not_specified
+whatever you feel like,not_specified
+your favorite,not_specified
+any,not_specified
+any goddam one!!!!,not_specified
+any near,not_specified
+any of them,not_specified
+Any of them.,not_specified
+any one,not_specified
+anything,not_specified
+anything is fine,not_specified
+anything would do,not_specified
+as a matter of,not_specified
+but it doesn't really,not_specified
+do anything,not_specified
+doesn't matter,not_specified
+I am not identifying any thing here,not_specified
+I did not say turn in anything I entered,not_specified
+i didn't see any options,not_specified
+I doesn't matter to me.,not_specified
+whatever you want,not_specified
+anything u like,not_specified
+"ok, thanks",positive_reaction
+"great, thanks",positive_reaction
+thank man!,positive_reaction
+Alright. Thanks!,positive_reaction
+excellent,positive_reaction
+great! thanks!,positive_reaction
+nice. thanks.,positive_reaction
+ok,positive_reaction
+OK thanks,positive_reaction
+thankfully so,positive_reaction
+Thanks!,positive_reaction
+Thanks.,positive_reaction
+thanks a truck,positive_reaction
+thanks dude,positive_reaction
+thanks for,positive_reaction
+thanks for your support,positive_reaction
+thanks,positive_reaction
+Thanks man,positive_reaction
+Thanks mate,positive_reaction
+Thanks u,positive_reaction
+Thanks verymuch,positive_reaction
+Thanks Watson,positive_reaction
+thanks you are  funy,positive_reaction
+Thank you,positive_reaction
+Thank you very much,positive_reaction
+This is awesome,positive_reaction
+This is good,positive_reaction
+you are funny,positive_reaction
+wow,positive_reaction
+great,positive_reaction
+look for a recipe that I like the most,suggest_dish
+Look for a recipe,suggest_dish
+Make sure you look for a recipe,suggest_dish
+I leave today's menu at your choice,suggest_dish
+I do not feel like thinking,suggest_dish
+suggest something,suggest_dish
+what would you eat today?,suggest_dish
+Recommend me,suggest_dish
+What can you offer me?,suggest_dish
+Today I have to go very quickly to work,suggest_dish
+I do not have time to cook today,suggest_dish
+I'm getting fat,suggest_dish
+I need to eat healthy,suggest_dish
+I have not eaten vegetables for a long time,suggest_dish
+I want fish today,suggest_dish
+I want to eat meat,suggest_dish
+I have run out of recipe ideas,suggest_dish
+I have run out of ideas,suggest_dish
+I can not think what to prepare today,suggest_dish
+I'm hungry,suggest_dish
+who could cook for tomorrow,suggest_dish
+What do I cook today?,suggest_dish
+Now what do we eat?,suggest_dish
+help me I do not know what to prepare for dinner,suggest_dish
+How boring is cooking,suggest_dish
+I do not feel like thinking about food,suggest_dish
+I have no idea what to do today to eat,suggest_dish
+what could I eat today,suggest_dish
+I do not know what to do,suggest_dish
+What can I eat today?,suggest_dish
+What have I cooked in the past,suggest_dish
+What have I cooked before,suggest_dish
+What are my favorite recipes,suggest_dish
+Show me my favorite recipes,suggest_dish
+I want to cook something I've cooked before,suggest_dish
+I want to cook one of my favorites,suggest_dish
+what's a good recipe,suggest_dish
+what should I eat?,suggest_dish
+what should I cook?,suggest_dish
+lets cook something,suggest_dish
+let's cook,suggest_dish
+i want to cook something,suggest_dish
+i want to cook,suggest_dish
+i want a recipe,suggest_dish
+i need a recipe suggestion,suggest_dish
+I don't know what to cook,suggest_dish
+give me a recipe,suggest_dish
+can you guess what it is ?,system_reliance
+do you lie,system_reliance
+are you trustworthy,system_reliance
+can i trust you,system_reliance
+do you tell the truth,system_reliance
+hey,system_reliance
+can you say me the time?,time_request
+can you tell time,time_request
+do you know the time,time_request
+hey whats the current time today,time_request
+hi what is the time?,time_request
+tell me the date,time_request
+what is the day today,time_request
+what is the time?,time_request
+what is today's date,time_request
+what's the date,time_request
+what time is it right now,time_request
+what time will it be in 4.5 hours,time_request
+what's the time,time_request
