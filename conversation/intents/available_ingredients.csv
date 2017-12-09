@@ -1,0 +1,11 @@
+What do I have in the fridge?,available_ingredients
+What is still left?,available_ingredients
+What can I cook with today?,available_ingredients
+Is there something in the fridge?,available_ingredients
+I have eaten everything already?,available_ingredients
+I have something to eat?,available_ingredients
+I have something to cook?,available_ingredients
+tell me what ingredients I have in the fridge,available_ingredients
+make me a summary of what I have,available_ingredients
+what ingredients do we have?,available_ingredients
+let's see! what do we have for today?,available_ingredients

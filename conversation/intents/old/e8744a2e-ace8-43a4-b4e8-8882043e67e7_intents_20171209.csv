@@ -1,0 +1,328 @@
+do you love,about_VA
+Do you like,about_VA
+do you hate,about_VA
+when were you born,about_VA
+what types of food do you like,about_VA
+whats your name,about_VA
+what's your name,about_VA
+whats your favorite movie,about_VA
+whats your favorite color,about_VA
+what's your favorite,about_VA
+what's your,about_VA
+your name,about_VA
+what music do you like,about_VA
+what is your name,about_VA
+what is your favourite music,about_VA
+what is your favourite colour,about_VA
+what do i call you,about_VA
+what are you called,about_VA
+tell me your favorite color,about_VA
+know any jokes,about_VA
+I want to date you,about_VA
+i want jokes,about_VA
+how tall are you,about_VA
+how old are you,about_VA
+how much do you weigh,about_VA
+hey, whats your ame?,about_VA
+what are you capable of,capabilities
+What makes you different from Siri or Google,capabilities
+what question,capabilities
+what should i ask,capabilities
+what things can you do,capabilities
+why should I use you,capabilities
+i want to see how this demo works,capabilities
+lets go,capabilities
+need help,capabilities
+ok watson, why should I use you,capabilities
+how close is,capabilities
+how can you help me,capabilities
+How are you going to help me,capabilities
+hi where am i,capabilities
+Hi! what could you do ?,capabilities
+help me,capabilities
+help,capabilities
+Hello can i have some help,capabilities
+do you know something about cognitive?,capabilities
+Do you do anything else?,capabilities
+do you do anything else,capabilities
+can you speak something with me?,capabilities
+can you read me,capabilities
+can you learn something new?,capabilities
+Can you hear me?,capabilities
+can you harm me?,capabilities
+Can you drive anywhere else?,capabilities
+can you do this?,capabilities
+CAN YOU DO OTHER THING?,capabilities
+can you do more than that?,capabilities
+can you do it?,capabilities
+can you do coding ?,capabilities
+Can you do anything that helps me drive?,capabilities
+can you direct me please?,capabilities
+can u please do that,capabilities
+can i training you?,capabilities
+Can I teach you,capabilities
+can I manipulate the,capabilities
+but can I ask you,capabilities
+so what did you learn?,capabilities
+tell me a joke,capabilities
+tell me joke,capabilities
+tell me jokes,capabilities
+tell me some jokes,capabilities
+tell me what things you can do,capabilities
+Tell me what to do.,capabilities
+tell me what you can do,capabilities
+What are you,capabilities
+what are your benefits,capabilities
+What are your functions?,capabilities
+What ca I ask?,capabilities
+what can I do,capabilities
+What can i say,capabilities
+what can you do,capabilities
+what canyou do,capabilities
+what can you do for me,capabilities
+what can you help me with,capabilities
+what capabilities you have,capabilities
+what care you capablities,capabilities
+what did you learn,capabilities
+what do you have?,capabilities
+What do you have,capabilities
+what do you know,capabilities
+what else,capabilities
+what are your capabilities Watson,capabilities
+No thank you,decision_replies
+no thanks watson,decision_replies
+yes thanks,decision_replies
+yes please,decision_replies
+yes definitely,decision_replies
+yes,decision_replies
+maybe,decision_replies
+no,decision_replies
+not a clue,decision_replies
+no thank,decision_replies
+shutdown,goodbyes
+shut down,goodbyes
+signing off,goodbyes
+signing out,goodbyes
+so long,goodbyes
+soon,goodbyes
+adieu,goodbyes
+adios,goodbyes
+au revoir,goodbyes
+bye,goodbyes
+bye bye,goodbyes
+bye now,goodbyes
+cya,goodbyes
+farewell,goodbyes
+go,goodbyes
+going,goodbyes
+goodbye,goodbyes
+good bye,goodbyes
+good day,goodbyes
+good night,goodbyes
+gotta go,goodbyes
+gotta run,goodbyes
+Have a nice day,goodbyes
+ok bye,goodbyes
+I'm leaving,goodbyes
+i said goodbye,goodbyes
+later,goodbyes
+laters,goodbyes
+leave,goodbyes
+logging off,goodbyes
+my time is up,goodbyes
+nice day,goodbyes
+no, bye!,goodbyes
+swag out,goodbyes
+thanks byebye,goodbyes
+then bye,goodbyes
+toodles,goodbyes
+hey stop here,goodbyes
+out of time,goodbyes
+over and out,goodbyes
+run,goodbyes
+see ya,goodbyes
+see ya later,goodbyes
+see ya soon,goodbyes
+see you,goodbyes
+should be going,goodbyes
+should go,goodbyes
+halo,greetings
+eo,greetings
+Hola,greetings
+hiya,greetings
+Hi, Watson, my name is John,greetings
+Hi watson,greetings
+hi to whom had like,greetings
+hi there,greetings
+Hi, my name is Michel,greetings
+Hi, my name is Diego,greetings
+hi how are u,greetings
+hi,greetings
+hey there,greetings
+heya,greetings
+hey,greetings
+Hello Watson,greetings
+Hello, My name is John?,greetings
+hello, my name is esteban,greetings
+Hello, how are you,greetings
+Hello,greetings
+greetings,greetings
+good morning,greetings
+good how are you,greetings
+good evening,greetings
+good day,greetings
+Good afternoon.,greetings
+g'day,greetings
+good,greetings
+feeling bit low,greetings
+fdsafsaHi watson,greetings
+aloha,greetings
+bonjour,greetings
+buenas dias,greetings
+buenos dias,greetings
+ciao,greetings
+I would like you to say hello,greetings
+say hello to me,greetings
+what doing,greetings
+what r u doing,greetings
+What's up,greetings
+What's up ?,greetings
+What's up?,greetings
+yello,greetings
+yo,greetings
+yo my man,greetings
+howdy,greetings
+How are you doing,greetings
+hola como estas,greetings
+look at,image
+How cook,image
+how can I do this?,image
+Do you know how to cook this?,image
+Do you know what this is?,image
+I have seen this dish in instagram,image
+this dish,image
+Look how good it looks!,image
+I would love to eat this, look,image
+what this,image
+I have seen this dish,image
+I see this,image
+Look at this picture,image
+I send you a photo,image
+can you learn new things,improving_system
+can you learn from me,improving_system
+how do i teach you,improving_system
+can i improve your system,improving_system
+Can I teach you,improving_system
+can i teach you something new,improving_system
+can i training you?,improving_system
+Can i ask you something in spanish?,interface
+Can you hear me?,interface
+can you interact in other languages,interface
+can you read me,interface
+can you speak something with me?,interface
+do you know non-english languages,interface
+do you speak languages other than english,interface
+hello can you hear me?,interface
+I want to talk,interface
+slow down the speech,interface
+tell me, what languages do you speak,interface
+what languages do you know,interface
+go **** yourself,negative_reaction
+let me out,negative_reaction
+i want you to die,negative_reaction
+Its not that good,negative_reaction
+i dont want u to do anything,negative_reaction
+I didn't say anything about weather.,negative_reaction
+Let me out!,negative_reaction
+go and fuck you off,negative_reaction
+die,negative_reaction
+can you understand me,negative_reaction
+bad,negative_reaction
+are you dead yet,negative_reaction
+Get out of my car!,negative_reaction
+You're asking me too much,negative_reaction
+You don't know anything,negative_reaction
+you are useless,negative_reaction
+You are rubbish,negative_reaction
+You are bad,negative_reaction
+when will you die,negative_reaction
+What good are you anyway?,negative_reaction
+put up with it,negative_reaction
+anything u like,not_specified
+whatever you want,not_specified
+I doesn't matter to me.,not_specified
+i didn't see any options,not_specified
+I did not say turn in anything I entered,not_specified
+I am not identifying any thing here,not_specified
+doesn't matter,not_specified
+do anything,not_specified
+but it doesn't really,not_specified
+as a matter of,not_specified
+anything would do,not_specified
+anything is fine,not_specified
+anything,not_specified
+any one,not_specified
+Any of them.,not_specified
+any of them,not_specified
+any near,not_specified
+any goddam one!!!!,not_specified
+any,not_specified
+your favorite,not_specified
+whatever you feel like,not_specified
+Whatever you like,not_specified
+you can go with your favorite,not_specified
+you decide,not_specified
+whatever,not_specified
+no preference,not_specified
+I don't see anything,not_specified
+I don't see any options,not_specified
+I don't see any,not_specified
+great,positive_reaction
+wow,positive_reaction
+you are funny,positive_reaction
+This is good,positive_reaction
+This is awesome,positive_reaction
+Thank you very much,positive_reaction
+Thank you,positive_reaction
+thanks you are  funy,positive_reaction
+Thanks Watson,positive_reaction
+Thanks verymuch,positive_reaction
+Thanks u,positive_reaction
+Thanks mate,positive_reaction
+Thanks man,positive_reaction
+thanks, man!,positive_reaction
+thanks for your support,positive_reaction
+thanks for,positive_reaction
+thanks dude,positive_reaction
+thanks a truck,positive_reaction
+Thanks.,positive_reaction
+Thanks!,positive_reaction
+Thanks,positive_reaction
+thankfully so,positive_reaction
+OK thanks,positive_reaction
+ok, thanks,positive_reaction
+nice. thanks.,positive_reaction
+great! thanks!,positive_reaction
+great, thanks!,positive_reaction
+great, thanks,positive_reaction
+excellent, thanks,positive_reaction
+Alright. Thanks!,positive_reaction
+hey, now it's raining, you said you didn't know anything about that. Are you a liar?,system_reliance
+do you tell the truth,system_reliance
+can i trust you,system_reliance
+are you trustworthy,system_reliance
+do you lie,system_reliance
+can you guess what it is ?,system_reliance
+what's the time,time_request
+what time will it be in 4.5 hours,time_request
+what time is it right now,time_request
+what's the date,time_request
+what is today's date,time_request
+what is the time?,time_request
+what is the day today,time_request
+tell me the date,time_request
+hi what is the time?,time_request
+hey whats the current time today,time_request
+do you know the time,time_request
+can you tell time,time_request
+can you say me the time?,time_request

@@ -1,5 +1,5 @@
 do you love,about_VA
-"hey, whats your ame?",about_VA
+hey, whats your name?,about_VA
 how much do you weigh,about_VA
 how old are you,about_VA
 how tall are you,about_VA
@@ -29,18 +29,16 @@ What makes you different from Siri or Google,capabilities
 what question,capabilities
 what should i ask,capabilities
 what things can you do,capabilities
-Where are we,capabilities
 why should I use you,capabilities
 i want to see how this demo works,capabilities
 lets go,capabilities
 need help,capabilities
-"ok watson, why should I use you",capabilities
+ok watson, why should I use you,capabilities
 how close is,capabilities
 how can you help me,capabilities
 How are you going to help me,capabilities
 hi where am i,capabilities
 Hi! what could you do ?,capabilities
-"Hi Watson, please tell about the latest news",capabilities
 help me,capabilities
 help,capabilities
 Hello can i have some help,capabilities
@@ -53,7 +51,6 @@ can you learn something new?,capabilities
 Can you hear me?,capabilities
 can you harm me?,capabilities
 Can you drive anywhere else?,capabilities
-can you do xyz?,capabilities
 can you do this?,capabilities
 CAN YOU DO OTHER THING?,capabilities
 can you do more than that?,capabilities
@@ -61,15 +58,12 @@ can you do it?,capabilities
 can you do coding ?,capabilities
 Can you do anything that helps me drive?,capabilities
 can you direct me please?,capabilities
-can you change lanes,capabilities
 can u please do that,capabilities
 can i training you?,capabilities
 Can I teach you,capabilities
 can I manipulate the,capabilities
 but can I ask you,capabilities
-adapt to current weather condition,capabilities
 so what did you learn?,capabilities
-stop it from raining,capabilities
 tell me a joke,capabilities
 tell me joke,capabilities
 tell me jokes,capabilities
@@ -121,7 +115,7 @@ leave,goodbyes
 logging off,goodbyes
 my time is up,goodbyes
 nice day,goodbyes
-"no, bye!",goodbyes
+no, bye!,goodbyes
 swag out,goodbyes
 thanks byebye,goodbyes
 then bye,goodbyes
@@ -142,29 +136,19 @@ signing off,goodbyes
 so long,goodbyes
 signing out,goodbyes
 soon,goodbyes
-adieu,goodbyes
 adios,goodbyes
 au revoir,goodbyes
 bye,goodbyes
 bye bye,goodbyes
 bye now,goodbyes
-cya,goodbyes
 farewell,goodbyes
-go,goodbyes
-going,goodbyes
 What's up?,greetings
 What's up,greetings
-what r u doing,greetings
+what are you doing,greetings
 what doing,greetings
 say hello to me,greetings
 I would like you to say hello,greetings
-ciao,greetings
-buenos dias,greetings
-buenas dias,greetings
-bonjour,greetings
 aloha,greetings
-fdsafsaHi watson,greetings
-feeling bit low,greetings
 good,greetings
 g'day,greetings
 Good afternoon.,greetings
@@ -174,21 +158,19 @@ good how are you,greetings
 good morning,greetings
 greetings,greetings
 Hello,greetings
-"Hello, how are you",greetings
-"hello, my name is esteban",greetings
-"Hello, My name is John?",greetings
+Hello, how are you,greetings
+hello, my name is esteban,greetings
+Hello, My name is John?,greetings
 Hello Watson,greetings
 hey,greetings
-heya,greetings
 hey there,greetings
 hi,greetings
 hi how are u,greetings
-"Hi, my name is Diego",greetings
-"Hi, my name is Michel",greetings
+Hi, my name is Diego,greetings
+Hi, my name is Michel,greetings
 hi there,greetings
-hi to whom had like,greetings
 Hi watson,greetings
-"Hi, Watson, my name is John",greetings
+Hi, Watson, my name is John,greetings
 hiya,greetings
 Hola,greetings
 eo,greetings
@@ -213,7 +195,7 @@ hello can you hear me?,interface
 do you speak languages other than english,interface
 do you know non-english languages,interface
 slow down the speech,interface
-"tell me, what languages do you speak",interface
+tell me, what languages do you speak,interface
 what languages do you know,interface
 can you speak something with me?,interface
 can you read me,interface
@@ -277,16 +259,16 @@ thanks a truck,positive_reaction
 thanks dude,positive_reaction
 thanks for,positive_reaction
 thanks for your support,positive_reaction
-"thanks, man!",positive_reaction
+thanks, man!,positive_reaction
 Thanks man,positive_reaction
 Thanks mate,positive_reaction
 Thanks u,positive_reaction
 Thanks verymuch,positive_reaction
 Thanks Watson,positive_reaction
 thanks you are  funy,positive_reaction
-"great, thanks!",positive_reaction
-"great, thanks",positive_reaction
-"excellent, thanks",positive_reaction
+great, thanks!,positive_reaction
+great, thanks,positive_reaction
+excellent, thanks,positive_reaction
 This is awesome,positive_reaction
 Alright. Thanks!,positive_reaction
 This is good,positive_reaction
@@ -295,9 +277,9 @@ Thank you,positive_reaction
 Thank you very much,positive_reaction
 great! thanks!,positive_reaction
 nice. thanks.,positive_reaction
-"ok, thanks",positive_reaction
+ok, thanks,positive_reaction
 OK thanks,positive_reaction
-"hey, now it's raining, you said you didn't know anything about that. Are you a liar?",system_reliance
+hey,  Are you a liar?,system_reliance
 can you guess what it is ?,system_reliance
 do you lie,system_reliance
 are you trustworthy,system_reliance
@@ -316,147 +298,3 @@ hey whats the current time today,time_request
 do you know the time,time_request
 can you tell time,time_request
 can you say me the time?,time_request
-Why it is raining?,weather
-It's become sunny now,weather
-It's a rainy day,weather
-"it is raining, what can you do ?",weather
-it isn't raining anymore,weather
-It is going to rain,weather
-it is cloudy now,weather
-it is a sunny day,weather
-is raining today,weather
-is raining now,weather
-Is raining?,weather
-is raining,weather
-is it sunny out?,weather
-is it rainning right?,weather
-Is it rainning now?,weather
-is it raining,weather
-is it gonna be raining,weather
-is it going to rain when we arrive?,weather
-is it going to rain today?,weather
-is it going to rain later today,weather
-is it going to rain for the entire day?,weather
-Is it going to rain all day?,weather
-Is it going to rain?,weather
-is it going to rain,weather
-is it dark outside,weather
-is it a sunny day,weather
-is it a nice day today?,weather
-is it a clear day ?,weather
-how warm is it,weather
-how`s the wheather,weather
-how's the wether,weather
-how many degrees are outside?,weather
-how long will it rain,weather
-How long until the rain ends?,weather
-how long till it rains,weather
-how long the rain?,weather
-how is the weater?,weather
-How is the typooon,weather
-How is the climate?,weather
-how hot is it outside,weather
-how hot,weather
-how cold is it outside,weather
-how cold is it out,weather
-how cold,weather
-How about this rain,weather
-"hi, what is the temperature in milan",weather
-"Hi, please tell me something about weather",weather
-hey watson it's not raining,weather
-Harvard is it going to rain,weather
-"Good weather, ya?",weather
-wow .. it is raining in front of my car,weather
-Will rain stop?,weather
-will rain end?,weather
-will it rain much longer?,weather
-will it be warm today?,weather
-why it is raining,weather
-Why is it raining today?,weather
-Why is it raining again,weather
-Why is it raining?,weather
-Why is it raining,weather
-why is it raining ?,weather
-Whn will this rain stop?,weather
-when wil the rain end?,weather
-when will this rain end?,weather
-when will this rain end,weather
-when will the sun set?,weather
-when will the sun come out,weather
-when will the sun begin?,weather
-when will the sun appear?,weather
-When will the rain stop,weather
-when will the rain arrive,weather
-When will it be sunny?,weather
-When will it be sunny,weather
-when will be the rain end ?,weather
-when were you there when rain is starch,weather
-when the rain stops?,weather
-when the rain of end,weather
-when the rail will end,weather
-when rain ends,weather
-when rain,weather
-when all the rain and,weather
-what would be the weather 50 km ahead?,weather
-What weather do you like?,weather
-what weather?,weather
-What us weather in 08854,weather
-what time will the weather change,weather
-what's the weather out would be to destination,weather
-whats the weather outside,weather
-whats the weather like right now,weather
-what's the weather,weather
-Whats the temperature outside?,weather
-What's the temperature outside?,weather
-whats the outside air temperature?,weather
-what is the weather like,weather
-What is the weather going to be like,weather
-what is the tempreture outside,weather
-What is the temperature outside?,weather
-What is the temperature outside,weather
-what is the rain?,weather
-what is the outside temperature?,weather
-what abt weather today?,weather
-what about weather today?,weather
-What about weather?,weather
-What about weather,weather
-weather is cool.,weather
-watson when this rain will over,weather
-the weather is important to me,weather
-The sun is out,weather
-tell me the weather,weather
-rain rain go away,weather
-raining now,weather
-oops... it's raining again,weather
-"oh, it started to rain",weather
-"Oh, it's a sunny day",weather
-do you think will rain?,weather
-do you know weather today,weather
-do I need a jacket,weather
-Does the weather get worse,weather
-Does It raining all day?,weather
-check weather,weather
-check the wheather,weather
-check the wether,weather
-check the weather,weather
-Check the weater,weather
-Can you tell me what the weather looks like?,weather
-can you tell me what's the weather will be in one hour if we keep goint in this direction?,weather
-Can we go someplace where it's not raining?,weather
-make it stop raining,weather
-look up the weather in tel aviv,weather
-look up the weather,weather
-i want to  weather news.,weather
-I want to see weather forecasts,weather
-I want to know the weather,weather
-it's sunny now,weather
-"it's sunny, maybe we don't need the lights",weather
-It's rain today.,weather
-Its Raining now,weather
-its raining now ?,weather
-it's raining ...,weather
-its is raining,weather
-it's hot,weather
-it's getting cold,weather
-it's cold today,weather
-It's cold here,weather

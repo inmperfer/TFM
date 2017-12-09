@@ -1,0 +1,78 @@
+capabilities_subject,date,date,day,month,the date,what date,year
+capabilities_subject,time,hour,minutes,seconds,the time,time,what time
+capabilities_subject,cooking,food,recipes,cook,dish,eat,dinner,lunch,breakfast
+cuisine,burgers,burger,burgers,cheeseburger,cheese burger,cheeseburgers,cheese burgers,hamburger,ham burger,hamburgers,ham burgers,mcdonalds,mcdonald's
+cuisine,pasta,calzone,canneloni,fettucine,Italian,pasta,pizza,pizzas,ravioli,spaghetti
+cuisine,seafood,fish,prawns,seafood,shrimp
+cuisine,tacos,burrito,burritos,Mexican,taco,tacos
+cuisine_type,african
+cuisine_type,american
+cuisine_type,argentine
+cuisine_type,asian
+cuisine_type,austrian
+cuisine_type,basque
+cuisine_type,belgian
+cuisine_type,breakfast
+cuisine_type,british,bangers and mash,pies
+cuisine_type,cajun
+cuisine_type,californian
+cuisine_type,canadian
+cuisine_type,caribbean
+cuisine_type,chinese
+cuisine_type,christmas
+cuisine_type,comfort
+cuisine_type,creole
+cuisine_type,cuban
+cuisine_type,danish
+cuisine_type,english
+cuisine_type,european
+cuisine_type,french
+cuisine_type,galician
+cuisine_type,german
+cuisine_type,gluten free
+cuisine_type,greek
+cuisine_type,halal
+cuisine_type,hawaiian
+cuisine_type,indian
+cuisine_type,irish
+cuisine_type,israeli
+cuisine_type,jamaican
+cuisine_type,japanese
+cuisine_type,korean
+cuisine_type,kosher
+cuisine_type,latin
+cuisine_type,lebanese
+cuisine_type,malaysian
+cuisine_type,mediterranean
+cuisine_type,middle eastern
+cuisine_type,moroccan
+cuisine_type,paleo
+cuisine_type,persian
+cuisine_type,peruvian
+cuisine_type,pescatarian
+cuisine_type,portuguese
+cuisine_type,russian
+cuisine_type,scandinavian
+cuisine_type,scottish
+cuisine_type,sichuan
+cuisine_type,soul
+cuisine_type,southern
+cuisine_type,southwestern
+cuisine_type,spanish
+cuisine_type,sushi
+cuisine_type,texan
+cuisine_type,tex mex
+cuisine_type,thai
+cuisine_type,turkish
+cuisine_type,tuscan
+cuisine_type,vegan
+cuisine_type,vegetarian
+cuisine_type,vietnamese
+option,third,3rd,average,cheap,cheapest,middle, third,3,three
+option,fifth,5th,farthest,fifth,last,lowest rated,worst,5,five
+option,first,1st,any,best,closeby,close by,closest,finest, first,hgihest rated,near,nearby,nearest,recommended,top rated,whatever,1,one
+option,fourth,4th,fourth,penultimate,second to last,4,four
+option,second,2nd, second,second best,second rated,two,2
+response_types,negative,definitely not,no,nope,not at all,no way
+response_types,positive,absolutely,definitely,yeah,yep,yeppers,yes
+response_types,uncertain,don't know,maybe,no idea,not sure,unknown
