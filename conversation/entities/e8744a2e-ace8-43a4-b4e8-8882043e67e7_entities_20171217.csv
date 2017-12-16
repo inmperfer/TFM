@@ -1,0 +1,159 @@
+cuisine_type,african
+cuisine_type,american
+cuisine_type,argentine
+cuisine_type,asian
+cuisine_type,austrian
+cuisine_type,basque
+cuisine_type,belgian
+cuisine_type,breakfast
+cuisine_type,british,bangers and mash,pies
+cuisine_type,cajun
+cuisine_type,californian
+cuisine_type,canadian
+cuisine_type,caribbean
+cuisine_type,chinese
+cuisine_type,christmas
+cuisine_type,comfort
+cuisine_type,creole
+cuisine_type,cuban
+cuisine_type,danish
+cuisine_type,english
+cuisine_type,european
+cuisine_type,french
+cuisine_type,galician
+cuisine_type,german
+cuisine_type,gluten free
+cuisine_type,greek
+cuisine_type,halal
+cuisine_type,hawaiian
+cuisine_type,indian
+cuisine_type,irish
+cuisine_type,israeli
+cuisine_type,jamaican
+cuisine_type,japanese
+cuisine_type,korean
+cuisine_type,kosher
+cuisine_type,latin
+cuisine_type,lebanese
+cuisine_type,malaysian
+cuisine_type,mediterranean
+cuisine_type,middle eastern
+cuisine_type,moroccan
+cuisine_type,paleo
+cuisine_type,persian
+cuisine_type,peruvian
+cuisine_type,pescatarian
+cuisine_type,portuguese
+cuisine_type,russian
+cuisine_type,scandinavian
+cuisine_type,scottish
+cuisine_type,sichuan
+cuisine_type,soul
+cuisine_type,southern
+cuisine_type,southwestern
+cuisine_type,spanish
+cuisine_type,sushi
+cuisine_type,texan
+cuisine_type,tex mex
+cuisine_type,thai
+cuisine_type,turkish
+cuisine_type,tuscan
+cuisine_type,vegan
+cuisine_type,vegetarian
+cuisine_type,vietnamese
+cuisine_type,low calories
+cuisine_type,lunch
+cuisine_type,low fat
+cuisine_type,low carb
+cuisine_type,protein
+cuisine_type,detox
+cuisine_type,dessert
+cuisine_type,mexican
+dish,burgers,burger,burgers,cheeseburger,cheese burger,cheeseburgers,cheese burgers,hamburger,ham burger,hamburgers,ham burgers,mcdonalds,mcdonald's
+dish,pasta,calzone,canneloni,fettucine,Italian,pasta,pizza,pizzas,ravioli,spaghetti
+dish,seafood,fish,prawns,seafood,shrimp
+dish,tacos,burrito,burritos,Mexican,taco,tacos
+dish,fruit
+dish,vegetable,salad
+dish,meat
+favourite,past
+favourite,favourite
+favourite,before
+favourite,most
+ingredient,apple
+ingredient,apricot
+ingredient,banana
+ingredient,bean
+ingredient,beer
+ingredient,bread
+ingredient,butter
+ingredient,carrot
+ingredient,cheese
+ingredient,chicken
+ingredient,chickpea
+ingredient,chocolate
+ingredient,chorizo,spicy pork sausage
+ingredient,clam
+ingredient,coke
+ingredient,corn
+ingredient,cream
+ingredient,cucumber
+ingredient,eggplant
+ingredient,garlic
+ingredient,grape
+ingredient,ham
+ingredient,humus
+ingredient,juice
+ingredient,ketchup
+ingredient,lentils
+ingredient,lettuce
+ingredient,mayonnaise
+ingredient,milk
+ingredient,mozzarella
+ingredient,mushroom
+ingredient,olive oil
+ingredient,olives
+ingredient,onion
+ingredient,orange
+ingredient,oregano
+ingredient,paprika
+ingredient,pasta
+ingredient,peach
+ingredient,pepper
+ingredient,pineapple
+ingredient,Pizza
+ingredient,plum
+ingredient,potato
+ingredient,prawn
+ingredient,rice
+ingredient,salmon
+ingredient,salt
+ingredient,spinach
+ingredient,sugar
+ingredient,york ham
+ingredient,zucchini
+ingredient,tomato
+ingredient,letuu
+ingredient,egg
+intolerances,gluten free,celiac
+intolerances,Dairy free,lactose free
+intolerances,egg free
+intolerances,nut free
+intolerances,Wheat free,celiac
+intolerances,alcohol free
+intolerances,Yeast free
+intolerances,sugar free,diabetes,diabetic
+menu_choice,lunch
+menu_choice,breakfast,morning meal,firts meal of the day
+menu_choice,dinner,main meal,supper
+menu_choice,dessert
+menu_choice,repast,banquet,feast
+menu_choice,brunch
+option,third,3rd,average,cheap,cheapest,middle, third,3,three
+option,fifth,5th,farthest,fifth,last,lowest rated,worst,5,five
+option,first,1st,any,best,closeby,close by,closest,finest, first,hgihest rated,near,nearby,nearest,recommended,top rated,whatever,1,one
+option,fourth,4th,fourth,penultimate,second to last,4,four
+option,second,2nd, second,second best,second rated,two,2
+response_types,negative,definitely not,no,nope,not at all,no way
+response_types,uncertain,don't know,maybe,no idea,not sure,unknown
+response_types,positive,absolutely,definitely,yeah,yep,yeppers,yes,of course
