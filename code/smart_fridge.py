@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # coding=utf-8
 
+import pprint
 import os
 import time
 import psycopg2
@@ -8,7 +9,8 @@ import requests
 import urllib.request
 import json
 from slackclient import SlackClient
-from watson_developer_cloud import VisualRecognitionV3
+from watson_developer_cloud import VisualRecognitionV3 as VisualRecognition
+from watson_developer_cloud import ConversationV1 as Conversation
 
 ######   CONSTANTS ########
 
@@ -32,18 +34,32 @@ VISUAL_RECOGNITION_VERSION = '2017-10-15'
 VISUAL_RECOGNITION_URL = 'https://gateway-a.watsonplatform.net/visual-recognition/api'
 VISUAL_RECOGNITION_KEY = os.environ.get('VISUAL_RECOGNITION_KEY')
 
-
+CONVERSATION_VERSION = '2017-09-23',
+CONVERSATION_USERNAME = os.environ.get('CONVERSATION_USERNAME')
+CONVERSATION_PASSWORD = os.environ.get('CONVERSATION_PASSWORD')
+CONVERSATION_URL = 'https://gateway.watsonplatform.net/conversation/api'
+CONVERSATION_WORKSPACE = os.environ.get('CONVERSATION_WORKSPACE')
 
 
 class SmartFridge():
     def __init__(self):
-        #  instantiate Slack
+        self.context = {}
+        self.intents = []
+        self.entities = []
+
+        #  Slack client instance
         self.slack_client = SlackClient(SLACK_BOT_TOKEN)
 
-        #  instantiate Watson recognition service
-        self.visual_recognition = VisualRecognitionV3(version=VISUAL_RECOGNITION_VERSION,
-                                                      url=VISUAL_RECOGNITION_URL,
-                                                      api_key=VISUAL_RECOGNITION_KEY)
+        # Watson Conversation sevice instance
+        self.conversation = Conversation(version = CONVERSATION_VERSION,
+                                         username = CONVERSATION_USERNAME,
+                                         password = CONVERSATION_PASSWORD,
+                                         url = CONVERSATION_URL)
+
+        #  Watson Visual Recognition service instance
+        self.visual_recognition = VisualRecognition(version=VISUAL_RECOGNITION_VERSION,
+                                                    url=VISUAL_RECOGNITION_URL,
+                                                    api_key=VISUAL_RECOGNITION_KEY)
         self.database_cursor = None
 
 
@@ -66,6 +82,9 @@ class SmartFridge():
             returns back what it needs for clarification.
         """
         response = "Not sure what you mean. Use the * do * command with numbers, delimited by spaces."
+
+        print(command)
+        self.msg_to_conversation(command)
 
         # Get the command to the user (Ojo! sustituir por llamada a Watson conversation)
         if command.startswith('do'):
@@ -115,6 +134,38 @@ class SmartFridge():
                     return 'photo', output['channel']
 
         return None, None
+
+
+
+
+    def msg_to_conversation(self, input_message):
+        message = {}
+        if(input_message != ''):
+            message['text'] = input_message
+
+
+        response = self.conversation.message(workspace_id = CONVERSATION_WORKSPACE,
+                                             message_input = message,
+                                             context = self.context,
+                                             alternate_intents = True)
+
+        self.context = response['context']
+        self.intents=response['intents']
+        self.entities=response['entities']
+
+
+        # Imprime la intencion y la entidad detectada
+        if(len(self.intents) > 0 and len(self.entities)>0 ):
+            print('#{0}  (@{1}:{2})'.format(self.intents[0]['intent'], self.entities[0]['entity'], self.entities[0]['value']))
+        elif(len(self.intents) > 0):
+            print('#{0}'.format(self.intents[0]['intent']))
+        elif(len(self.entities)>0 ):
+            print('@{0}:{1}'.format(self.entities[0]['entity'], self.entities[0]['value']))
+
+        print(response["output"]["text"][0])
+
+
+
 
 
     def database_connection(self):
@@ -208,8 +259,7 @@ if __name__ == "__main__":
     smartfridge.database_connection()
 
     ingredients = 'chicken, tomatoes, cheese, onion, egg'
-    smartfridge.get_recipes_from_ingredients(ingredients)
-
+    #smartfridge.get_recipes_from_ingredients(ingredients)
 
     if smartfridge.slack_client.rtm_connect():
         print("smartfridge connected and running!")
