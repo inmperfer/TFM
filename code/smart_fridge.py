@@ -47,6 +47,16 @@ class SmartFridge():
         self.intents = []
         self.entities = []
 
+        # Enviroment variables
+        self.search_recipe = False
+        self.image_recipe = False
+        self.dish = None
+        self.counter = 0
+        self.yum_sugest = False
+        self.cuisine_type = None
+        self.ingredients = None
+        self.intolerances = None
+
         #  Slack client instance
         self.slack_client = SlackClient(SLACK_BOT_TOKEN)
 
@@ -81,21 +91,16 @@ class SmartFridge():
             are valid commands. If so, then acts on the commands. If not,
             returns back what it needs for clarification.
         """
-        response = "Not sure what you mean. Use the * do * command with numbers, delimited by spaces."
+        response = "Not sure what you mean. Please reword your request"
 
-        print(command)
-        self.msg_to_conversation(command)
+        print('\n\n command = {}'.format(command))
 
-        # Get the command to the user (Ojo! sustituir por llamada a Watson conversation)
-        if command.startswith('do'):
-            response = "Sure...write some more code then I can do that!"
-        elif command.startswith('db'):
-            response=','.join(map(str, self.get_db_information()))
-        elif command.startswith('photo'):
+        if command.startswith('photo'):
+            self.context['image_recipe']="true"
+            self.msg_to_conversation('')
+            
             with open('./download/food.jpg', 'rb') as image_file:
-                vr_response = smartfridge.visual_recognition.classify(images_file=image_file,
-                                                                      classifier_ids=['food'])
-
+                vr_response = smartfridge.visual_recognition.classify(images_file=image_file, classifier_ids=['food'])
                 if vr_response['images'] and len(vr_response['images'])>0:
                     image= vr_response['images'][0]
                     if image['classifiers'] and len(image['classifiers'])>0:
@@ -106,12 +111,41 @@ class SmartFridge():
                             response='Uhm... :yum: :yum: :yum: This looks really good. I think (score: {1}) it is... *{0}*'.format(food, score)
                             response=response + '\n' + smartfridge.get_ingredients(smartfridge.get_recipe_id(food))
 
+        else:
+            response_text, intent, entity = self.msg_to_conversation(command)
+            print('intent = {} '.format(intent))
+            print('entity = {} '.format(entity))
+
+            if intent=='get_recipe':
+                self.get_recipe()
+                response = response_text
+            elif intent=='sugest_dish':
+                self.sugest_dish()
+                response = response_text
+            elif intent=='available_ingredients':
+                response = response_text + '\n' + self.available_ingredients()
+            else:
+                response = response_text
+
+
 
         # Provide response
         self.slack_client.api_call("chat.postMessage",
                                    channel=channel,
                                    text=response,
                                    as_user=True)
+
+
+
+    def get_recipe(self):
+        print('La intencion detectada es get_recipe')
+
+
+    def sugest_dish(self):
+        print('La intencion detectada es sugest_dish')
+
+    def available_ingredients(self):
+        return (','.join(map(str, self.get_db_information())))
 
 
     def parse_slack_output(self, slack_rtm_output):
@@ -140,6 +174,9 @@ class SmartFridge():
 
     def msg_to_conversation(self, input_message):
         message = {}
+        intent = ''
+        entity = ''
+
         if(input_message != ''):
             message['text'] = input_message
 
@@ -149,22 +186,63 @@ class SmartFridge():
                                              context = self.context,
                                              alternate_intents = True)
 
-        self.context = response['context']
-        self.intents=response['intents']
-        self.entities=response['entities']
-
+        self.update_context_variables(response['context'])
+        self.intents = response['intents']
+        self.entities = response['entities']
 
         # Imprime la intencion y la entidad detectada
         if(len(self.intents) > 0 and len(self.entities)>0 ):
             print('#{0}  (@{1}:{2})'.format(self.intents[0]['intent'], self.entities[0]['entity'], self.entities[0]['value']))
+            intent = self.intents[0]['intent']
+            entity = self.entities[0]['entity']
         elif(len(self.intents) > 0):
             print('#{0}'.format(self.intents[0]['intent']))
+            intent = self.intents[0]['intent']
         elif(len(self.entities)>0 ):
             print('@{0}:{1}'.format(self.entities[0]['entity'], self.entities[0]['value']))
+            entity = self.entities[0]['entity']
 
-        print(response["output"]["text"][0])
+        response_text = response["output"]["text"][0]
+
+        return response_text, intent, entity
 
 
+    def update_context_variables(self, context):
+
+        self.context = context
+        print('CONTEXT')
+
+        if 'search_recipe' in self.context.keys():
+            self.search_recipe=self.context['search_recipe']
+            print('search_recipe = {}'.format(self.context['search_recipe']))
+
+        if 'image_recipe' in self.context.keys():
+            self.image_recipe=self.context['image_recipe']
+            print('image_recipe = {}'.format(self.context['image_recipe']))
+
+        if 'dish' in self.context.keys():
+            self.dish=self.context['dish']
+            print('dish = {}'.format(self.context['dish']))
+
+        if 'counter' in self.context.keys():
+            self.counter=self.context['counter']
+            print('counter = {}'.format(self.context['counter']))
+
+        if 'yum_sugest' in self.context.keys():
+            self.yum_sugest=self.context['yum_sugest']
+            print('yum_sugest = {}'.format(self.context['yum_sugest']))
+
+        if 'cuisine_type' in self.context.keys():
+            self.cuisine_type=self.context['cuisine_type']
+            print('cuisine_type = {}'.format(self.context['cuisine_type']))
+
+        if 'ingredients' in self.context.keys():
+            self.ingredients=self.context['ingredients']
+            print('ingredients = {}'.format(self.context['ingredients']))
+
+        if 'intolerances' in self.context.keys():
+            self.intolerances=self.context['intolerances']
+            print('intolerances = {}'.format(self.context['intolerances']))
 
 
 
@@ -258,7 +336,7 @@ if __name__ == "__main__":
     smartfridge=SmartFridge()
     smartfridge.database_connection()
 
-    ingredients = 'chicken, tomatoes, cheese, onion, egg'
+    #ingredients = 'chicken, tomatoes, cheese, onion, egg'
     #smartfridge.get_recipes_from_ingredients(ingredients)
 
     if smartfridge.slack_client.rtm_connect():
