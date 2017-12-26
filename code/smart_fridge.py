@@ -57,6 +57,8 @@ class SmartFridge():
         self.context['cuisine_type'] = None
         self.context['ingredients'] = None
         self.context['intolerances'] = None
+        self.context['insult_counter'] = 0
+
 
         #  Slack client instance
         self.slack_client = SlackClient(SLACK_BOT_TOKEN)
@@ -133,10 +135,12 @@ class SmartFridge():
             elif intent=='available_ingredients':
                 self.send_response('Ok, I\'ll make a recap for you... \n\n')
                 response = self.analize_content()
+            elif intent == 'negative_reaction':
+                response = response_text
             else:
                 response = response_text
 
-            self.send_response(response)
+        self.send_response(response)
 
 
     def analize_content(self):
@@ -276,7 +280,8 @@ class SmartFridge():
             entity = self.entities[0]['entity']
 
         if(response["output"] and response["output"]["text"]):
-            response_text = response["output"]["text"][0]
+            for r in response["output"]["text"]:
+                response_text = response_text + '\n' + r
 
         return response_text, intent, entity
 
@@ -289,8 +294,7 @@ class SmartFridge():
 
 
     def database_connection(self):
-        # print the connection string we will use to connect
-        print('Connecting to database ... {}'.format(DB_STRING_CONNECTION))
+        print('Connecting to database ... ')
 
         # get a connection, if a connect cannot be made an exception will be raised here
         db_conn = psycopg2.connect(DB_STRING_CONNECTION)
@@ -358,7 +362,6 @@ class SmartFridge():
                 print('[{0}] : {1}'.format(i+1, recipe['title']))
 
     def get_recipe_id(self, query):
-        print('query = {}'.format(query))
         recipes=self.search_recipes(query)
         if recipes and 'recipes' in recipes and len(recipes['recipes'])>0:
             return(recipes['recipes'][0]['recipe_id'])
