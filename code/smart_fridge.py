@@ -73,16 +73,16 @@ class SmartFridge():
         self.database_cursor = None
 
 
-    def get_db_information(self):
+    def fetch_content(self, query):
         # execute Query
-        self.database_cursor.execute("SELECT name FROM products")
+        self.database_cursor.execute(query)
 
         # retrieve the records from the database
         records = self.database_cursor.fetchall()
-        ingredients_fridge=[]
+        record_list=[]
         for r in records:
-            ingredients_fridge.append(r[0])
-        return(ingredients_fridge)
+            record_list.append(r[0])
+        return(record_list)
 
 
     def handle_command(self, command, channel):
@@ -130,11 +130,61 @@ class SmartFridge():
                 self.sugest_dish()
                 response = response_text
             elif intent=='available_ingredients':
-                response = response_text + '\n' + self.available_ingredients()
+                self.send_response('Ok, let me take a look, and I\'ll make a recap for you\n\n')
+                response = self.analize_content()
             else:
                 response = response_text
 
             self.send_response(response)
+
+
+    def analize_content(self):
+        all_products = []
+        expired_products = []
+        products_to_expire = []
+        recap = ''
+
+        # All products
+        query_all = "SELECT name " \
+                    "FROM products " \
+                    "ORDER by name"
+        all_products = self.fetch_content(query_all)
+
+        # Expired products
+        query_expired = "SELECT name " \
+                        "FROM products " \
+                        "WHERE date(expiration_date)<=current_date " \
+                        "ORDER by name"
+        expired_products = self.fetch_content(query_expired)
+
+        # Products to expire in next 7 days
+        query_to_expire = "SELECT name " \
+                          "FROM products " \
+                          "WHERE date(expiration_date)>current_date " \
+                          "AND date(expiration_date)<=current_date + interval '7 days' " \
+                          "ORDER by name"
+
+        products_to_expire= self.fetch_content(query_to_expire)
+
+        if len(all_products)>0:
+            recap= 'There are currently a total of {} *available* products: '.format(len(all_products)) + (', '.join(map(str, all_products)))
+            if(len(expired_products)>0):
+                recap = recap + '\n\n' + ':recycle: There are {} *expired* products: '.format(len(expired_products)) + (', '.join(map(str, all_products)))
+            else:
+                recap = recap + '\n\n' + 'Great! :clap: There are no expired products'
+            if(len(products_to_expire)>0):
+                recap = recap + '\n\n' + 'There are {} products *to expire*: '.format(len(products_to_expire)) + (', '.join(map(str, products_to_expire)))
+            else:
+                recap = recap + '\n\n' + 'Congrats! :v: There are no products to expire in the next 7 days'
+
+        else:
+            recap= ':-1: You have the fridge EMPTY! :disappointed_relieved:' \
+                    'Make the purchase if you do not want to starve. ' \
+                    'Today you will have to order food at home or go to your parents\' house :family:'
+
+        return(recap)
+
+
 
 
     def send_response(self, response):
@@ -163,9 +213,6 @@ class SmartFridge():
 
     def sugest_dish(self):
         print('La intencion detectada es sugest_dish')
-
-    def available_ingredients(self):
-        return (','.join(map(str, self.get_db_information())))
 
 
     def parse_slack_output(self, slack_rtm_output):
@@ -314,7 +361,8 @@ class SmartFridge():
 
     def get_recipes_from_database(self):
         recipe_ids=[]
-        db_products=self.get_db_information()
+        query="SELECT name FROM products"
+        db_products=self.fetch_content(query)
         for product in db_products:
             id=self.get_recipe_id(product)
             if id not in recipe_ids:
