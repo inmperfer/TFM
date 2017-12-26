@@ -40,6 +40,7 @@ CONVERSATION_PASSWORD = os.environ.get('CONVERSATION_PASSWORD')
 CONVERSATION_URL = 'https://gateway.watsonplatform.net/conversation/api'
 CONVERSATION_WORKSPACE = os.environ.get('CONVERSATION_WORKSPACE')
 
+DAYS_TO_EXPIRE = 7
 
 class SmartFridge():
     def __init__(self):
@@ -130,7 +131,7 @@ class SmartFridge():
                 self.sugest_dish()
                 response = response_text
             elif intent=='available_ingredients':
-                self.send_response('Ok, let me take a look, and I\'ll make a recap for you\n\n')
+                self.send_response('Ok, I\'ll make a recap for you... \n\n')
                 response = self.analize_content()
             else:
                 response = response_text
@@ -142,6 +143,7 @@ class SmartFridge():
         all_products = []
         expired_products = []
         products_to_expire = []
+        header = ''
         recap = ''
 
         # All products
@@ -157,32 +159,36 @@ class SmartFridge():
                         "ORDER by name"
         expired_products = self.fetch_content(query_expired)
 
-        # Products to expire in next 7 days
+        # Products to expire in next DAYS_TO_EXPIRE days
         query_to_expire = "SELECT name " \
                           "FROM products " \
                           "WHERE date(expiration_date)>current_date " \
-                          "AND date(expiration_date)<=current_date + interval '7 days' " \
-                          "ORDER by name"
+                          "AND date(expiration_date)<=current_date + interval '{} days' " \
+                          "ORDER by name".format(DAYS_TO_EXPIRE)
 
         products_to_expire= self.fetch_content(query_to_expire)
 
         if len(all_products)>0:
-            recap= 'There are currently a total of {} *available* products: '.format(len(all_products)) + (', '.join(map(str, all_products)))
+            header = '\n\nThere are {0} products in total, {1} products are already expired and {2} products will expire soon. '.\
+                            format(len(all_products), len(expired_products), len(products_to_expire))
+
             if(len(expired_products)>0):
-                recap = recap + '\n\n' + ':recycle: There are {} *expired* products: '.format(len(expired_products)) + (', '.join(map(str, all_products)))
+                footer = '\n\nThrow out the expired foods. '
+                recap = recap + '\n\n' + ':recycle: *Already expired*:  {0}.'.format(', '.join(map(str, expired_products)))
             else:
-                recap = recap + '\n\n' + 'Great! :clap: There are no expired products'
+                recap = recap + '\n\n' + 'Great! :clap: There are no expired products.'
             if(len(products_to_expire)>0):
-                recap = recap + '\n\n' + 'There are {} products *to expire*: '.format(len(products_to_expire)) + (', '.join(map(str, products_to_expire)))
+                footer = footer + 'Consider using the foods to expire as soon as possible.'
+                recap = recap + '\n\n' + ':alarm_clock: *To expire*:  {0}.'.format(', '.join(map(str, products_to_expire)))
             else:
-                recap = recap + '\n\n' + 'Congrats! :v: There are no products to expire in the next 7 days'
+                recap = recap + '\n\n' + 'Congrats! :v: There are no products to expire in the next {0} days.'.format(DAYS_TO_EXPIRE)
 
         else:
             recap= ':-1: You have the fridge EMPTY! :disappointed_relieved:' \
                     'Make the purchase if you do not want to starve. ' \
-                    'Today you will have to order food at home or go to your parents\' house :family:'
+                    'Today you will have to order food at home or go to your parents\' house :family:.'
 
-        return(recap)
+        return(header + recap + footer)
 
 
 
