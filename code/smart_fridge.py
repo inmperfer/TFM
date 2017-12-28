@@ -134,7 +134,7 @@ class SmartFridge():
                 self.sugest_dish()
                 response = response_text
             elif intent=='available_ingredients':
-                self.send_response('Ok, I\'ll make a recap for you... \n\n')
+                self.send_response('I\'ll make a recap for you... \n\n')
                 response = self.analize_content()
             elif intent == 'negative_reaction':
                 response = response_text
