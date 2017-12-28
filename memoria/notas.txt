@@ -15,11 +15,13 @@ MEJORAS
  
 - cuando el usuario le pregunte si tiene ingredientes suficientes que responda que es una primera versión y que no puede contestar a eso, que está estudiando para ello
 
-
+-  ingredientes como lista
 
 INTERFAZ CONVERSACION
 mover, duplicar, deshacer cambios en la conversacion
 semi optional slots
+versionado, backups
+
 
 ¿por qué no he usado slots?
 - me limita para los slots opcionales, porque tengo que usar nodos diferentes para comprobar si están rellenos, 
