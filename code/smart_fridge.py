@@ -51,7 +51,7 @@ class SmartFridge():
         # Enviroment variables
         self.context['search_recipe'] = False
         self.context['image_recipe'] = False
-        self.context['sugest_dish'] = False
+        self.context['suggest_dish'] = False
         self.context['yum_sugest'] = False
         self.context['cuisine_type'] = None
         self.context['ingredients'] = None
