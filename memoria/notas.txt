@@ -1,0 +1,41 @@
+COSAS A MENCINAR
+- indisponibilidad food2fork
+
+- problema aleatorio con slack
+
+
+MEJORAS
+- utiliza la entidad del sistema @sys-person para extraer el nombre del usuario de la entrada 
+
+- controlar si suben una foto de algo que no es comida
+
+- detectar como excluir ciertos ingredientes, captar las negaciones
+
+- comidas segun partes del día: desayuno, comida, cena...
+ 
+- cuando el usuario le pregunte si tiene ingredientes suficientes que responda que es una primera versión y que no puede contestar a eso, que está estudiando para ello
+
+
+
+INTERFAZ CONVERSACION
+mover, duplicar, deshacer cambios en la conversacion
+semi optional slots
+
+¿por qué no he usado slots?
+- me limita para los slots opcionales, porque tengo que usar nodos diferentes para comprobar si están rellenos, 
+comprobando cada una de las variables ya que de un nodo con slots no sale hasta que no tiene rellenos todos.
+
+en un nodo con slots no puedo inicializar variables de entorno, porque no hay editor JSON salvo para la respuesta cuando los encuentra todos
+
+no puedo usar nodos de slot para cada variable, porque la respuesta del usuario puede contener información de otras entidades
+el uso de slot nos ayuda a asegurarnos de que la información necesaria es proporcionada, y si no es proporcionada se solicita hasta que sea proporcionada, intercambiando respuestas adecuadas en cada caso.
+Pero en el caso de información opcional esto no es tan util, porque 
+
+copiar y pegar, duplicar nodos y moverlos, no le sienta bien, en varias ocasiones se pierde la información o empieza a comportarse de forma aleatoria. No detecta errores en las variables entorno
+puedo quitar una letra y no avisa, esto dificulta la depuracion, porque hay que ir mirando por cada editor JSON de cada nodo para ver si la variable es correcta. No se puede deshacer.
+
+Cuidado con el orden de las condiciones en el slot, y tambien he comprobado que es necesario añadir una frase en "If $variable is not present then ask:". Aun están en beta y no están muy depurados, 
+si dejas una respuesta vacía para que no responda nada, porque lo unico que quieres es incrementar el contador entonces no funciona correctamente. Desaparecen botones de volver o guardar.
+
+
+  
