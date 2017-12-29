@@ -99,13 +99,11 @@ class SmartFridge():
 
         print('\n\nINPUT = {}\n'.format(command))
 
+        # Processing of the response
         if command.startswith('photo'):
-            self.context['image_recipe']="true"
+            self.send_response('Please, give me a second... :hourglass_flowing_sand:')
+            self.context['image_recipe'] = "true"
             response_text, intent, entity=self.update_conversation_context()
-            # print('Respuesta tras actualizar contexto')
-            # print(response_text)
-            # print(intent)
-            # print(entity)
 
             with open('./download/food.jpg', 'rb') as image_file:
                 vr_response = self.visual_recognition.classify(images_file=image_file, classifier_ids=['food'])
@@ -117,31 +115,88 @@ class SmartFridge():
                             food=classifier['classes'][0]['class']
                             score=classifier['classes'][0]['score']
                             response='Uhm... :yum: :yum: :yum: This looks really good. I think (score: {1}) it is... *{0}*'.format(food, score)
-                            response=response + '\n' + smartfridge.get_ingredients(self.get_recipe_id(food))
+                            self.send_response(response)
+                            response= '\n' + smartfridge.get_ingredients(self.get_recipe_id(food))
 
         else:
             response_text, intent, entity = self.msg_to_conversation(command)
             print('intent = {} '.format(intent))
             print('entity = {} '.format(entity))
 
-            if intent=='get_recipe':
-                response='No recipe found'
+            # A suggestion is provide to the user because the required information
+            # is not provided by the user after several attempts
+            # YUM_SUGGEST
+            if(self.context['yum_sugest'] == 'true'):
                 self.send_response(response_text)
-                recipe = self.get_recipe()
-                if recipe!='':
-                    response=recipe
+                response = self.yum_suggestion()
+
+            elif(self.context['suggest_dish'] == 'true'):
+                self.send_response(response_text)
+                response = self.suggest_dish()
+            # GET_RECIPE
+            elif intent == 'get_recipe':
+                if(self.context['search_recipe'] == 'true'):
+                    response = self.get_recipe()
+                elif(self.context['yum_sugest'] == 'true'):
+                    response = self.yum_suggestion()
+                else:
+                    response= response_text
+
+            # SUGGEST_DISH
             elif intent=='sugest_dish':
-                self.sugest_dish()
-                response = response_text
+                if(self.context['suggest_dish'] == 'true'):
+                    response = self.suggest_dish()
+                elif(self.context['yum_sugest'] == 'true'):
+                    response = self.yum_suggestion()
+                else:
+                    response = response_text
+
+            # AVAILABLE_INGREDIENTS
             elif intent=='available_ingredients':
                 self.send_response('I\'ll make a recap for you... \n\n')
                 response = self.analize_content()
+
+            # NEGATIVE_REACTION
             elif intent == 'negative_reaction':
                 response = response_text
+
+            # ANYTHING ELSE
             else:
                 response = response_text
 
+        # Send the corresponding response to the user interface (slack)
         self.send_response(response)
+
+
+
+    def yum_suggestion(self):
+        response = 'yumyumBot suggestion with the ingredients availables or the trending recipe of the day'
+        return response
+
+    def suggest_dish(self):
+        print('ingredients={0}, cuisine type={1}, intolerances={2}'.format(self.context['ingredients'],
+                                                                           self.context['cuisine_type'],
+                                                                           self.context['intolerances']))
+        recipe = ''
+        query = ''
+        if (self.context['suggest_dish']):
+            if self.context['ingredients'] != None:
+                query = query + self.context['ingredients']
+            if self.context['cuisine_type'] != None:
+                query = query + ' ' + self.context['cuisine_type']
+            if self.context['intolerances'] != None:
+                query = query + ' ' + self.context['intolerances']
+
+            if query != '':
+                print('Buscando receta para: << {} >>'.format(query))
+                recipe = self.get_ingredients(self.get_recipe_id(query))
+
+        if recipe != '':
+            response = recipe
+        else:
+            response = ':disappointed: Sorry, no recipe found'
+
+        return response
 
 
     def analize_content(self):
@@ -212,18 +267,14 @@ class SmartFridge():
 
 
     def get_recipe(self):
-        recipe=''
+        recipe = ':disappointed: Sorry, no recipe found'
         print('dish = {}'.format(self.context['dish']))
         print('search_recipe = {}'.format(self.context['search_recipe']))
-        if (self.context['dish']!=None and self.context['search_recipe']):
+        if (self.context['dish'] != None and self.context['search_recipe']):
             print('Buscando receta para: << {} >>'.format(self.context['dish']))
             recipe=self.get_ingredients(self.get_recipe_id(self.context['dish']))
         return recipe
 
-
-
-    def sugest_dish(self):
-        print('La intencion detectada es sugest_dish')
 
 
     def parse_slack_output(self, slack_rtm_output):
