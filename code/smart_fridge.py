@@ -100,6 +100,7 @@ class SmartFridge():
         print('\n\nINPUT = {}\n'.format(command))
 
         # Processing of the response
+        # Visual recognition
         if command.startswith('photo'):
             self.send_response('Please, give me a second... :hourglass_flowing_sand:')
             self.context['image_recipe'] = "true"
@@ -114,9 +115,12 @@ class SmartFridge():
                         if classifier['classes'] and len(classifier['classes'])>0:
                             food=classifier['classes'][0]['class']
                             score=classifier['classes'][0]['score']
-                            response='Uhm... :yum: :yum: :yum: This looks really good. I think (score: {1}) it is... *{0}*'.format(food, score)
-                            self.send_response(response)
-                            response= '\n' + smartfridge.get_ingredients(self.get_recipe_id(food))
+                            if (food != 'non-food'):
+                                response='Uhm... :yum: :yum: :yum: This looks really good. I think (score: {1}) it is... *{0}*'.format(food, score)
+                                self.send_response(response)
+                                response= '\n' + smartfridge.get_ingredients(self.get_recipe_id(food))
+                            else:
+                                response ='I am sorry, but I do not recognize anything edible in this image. Try with a another one.'
 
         else:
             response_text, intent, entity = self.msg_to_conversation(command)
@@ -133,6 +137,8 @@ class SmartFridge():
             elif(self.context['suggest_dish'] == 'true'):
                 self.send_response(response_text)
                 response = self.suggest_dish()
+
+
             # GET_RECIPE
             elif intent == 'get_recipe':
                 if(self.context['search_recipe'] == 'true'):
@@ -168,17 +174,48 @@ class SmartFridge():
         self.send_response(response)
 
 
-
+    # Prioritizes the use of ingredients that are about to expire
+    # Excludes expired products
     def yum_suggestion(self):
-        response = 'yumyumBot suggestion with the ingredients availables or the trending recipe of the day'
+        ingredients = []
+        #response = 'yumyumBot suggestion with the available ingredients or the trending recipe of the day'
+
+        # Obtain the 2 products with the closest expiration date and that are in more quantity
+        db_query = 'SELECT name ' \
+                    'FROM products ' \
+                    'WHERE date(expiration_date) > current_date ' \
+                    'ORDER by expiration_date ASC, quantity DESC ' \
+                    'LIMIT 2'
+
+        ingredients = self.fetch_content(db_query)
+
+        if len(ingredients) > 0:
+            query = ', '.join(map(str, ingredients))
+            response = self.get_ingredients(self.get_recipe_id(query))
+            # IMPROVEMENT: add to the query the register user intolerances
+        else:
+            response = self.get_top_rated_recipe()
+
+        print('top rated = {}'.format(self.get_top_rated_recipe()))
+        print('trending = {}'.format(self.get_trending_recipe()))
+
         return response
+
+
+    def get_top_rated_recipe(self):
+        return self.get_ingredients(self.get_recipe_id(''))
+
+    def get_trending_recipe(self):
+        return self.get_ingredients(self.get_recipe_id('', 't'))
 
     def suggest_dish(self):
         print('ingredients={0}, cuisine type={1}, intolerances={2}'.format(self.context['ingredients'],
                                                                            self.context['cuisine_type'],
                                                                            self.context['intolerances']))
-        recipe = ''
+
         query = ''
+        response = ':disappointed: Sorry, no recipes found for your request. Please, try a new search'
+
         if (self.context['suggest_dish']):
             if self.context['ingredients'] != None:
                 query = query + self.context['ingredients']
@@ -189,12 +226,7 @@ class SmartFridge():
 
             if query != '':
                 print('Buscando receta para: << {} >>'.format(query))
-                recipe = self.get_ingredients(self.get_recipe_id(query))
-
-        if recipe != '':
-            response = recipe
-        else:
-            response = ':disappointed: Sorry, no recipe found'
+                response = self.get_ingredients(self.get_recipe_id(query))
 
         return response
 
@@ -267,7 +299,7 @@ class SmartFridge():
 
 
     def get_recipe(self):
-        recipe = ':disappointed: Sorry, no recipe found'
+        recipe = ':disappointed: Sorry, no recipes found for your request. Please, try a new search'
         print('dish = {}'.format(self.context['dish']))
         print('search_recipe = {}'.format(self.context['search_recipe']))
         if (self.context['dish'] != None and self.context['search_recipe']):
@@ -382,29 +414,40 @@ class SmartFridge():
         return True
 
 #######   FOOD2FORK    #######
-    def search_recipes(self, query):
+
+
+    def search_recipes(self, query, sortBy='r'):
         endpoint = 'http://food2fork.com/api/search'
-        url = self._urlHelper(endpoint, q=query)
+        url = self._urlHelper(endpoint, q=query, sort=sortBy)
+        print(url)
         return requests.get(url).json()
 
     def get_recipe_from_id(self, recipeId):
         endpoint = 'http://food2fork.com/api/get'
         try:
             url = self._urlHelper(endpoint, rId=recipeId)
+            print(url)
             return requests.get(url).json()
         except Exception as inst:
             print(inst)
             return None
 
     def get_ingredients(self, recipeId):
-        recipe=self.get_recipe_from_id(recipeId)
-        if recipe and 'recipe' in recipe:
-            ingredients=[]
-            source = '\nHere, you can find the *method of cooking*: {}'.format(recipe['recipe']['source_url'])
-            for ingredient in (recipe['recipe']['ingredients']):
-                ingredients.append(ingredient)
-                str_ingredients= '\nTo cook this dish you need the following *ingredients*:' + '\n\n   - {}'.format('\n    - '.join(map(str, ingredients)))
-            return (str_ingredients + '\n' + source)
+        print('recipe id = {}'.format(recipeId))
+        response = ':disappointed: Sorry, no recipes found for your request. Please, try a new search'
+        if recipeId != None:
+            recipe = self.get_recipe_from_id(recipeId)
+            if recipe and 'recipe' in recipe:
+                ingredients=[]
+                source = '\nHere, you can find the *method of cooking*: {}'.format(recipe['recipe']['source_url'])
+                for ingredient in (recipe['recipe']['ingredients']):
+                    ingredients.append(ingredient)
+                    str_ingredients= '\nTo cook this dish you need the following *ingredients*:' + '\n\n   - {}'.format('\n    - '.join(map(str, ingredients)))
+                response = str_ingredients + '\n' + source
+
+        return response
+
+
 
 
     def get_recipes_from_ingredients(self, ingredients):
@@ -413,8 +456,8 @@ class SmartFridge():
             for i, recipe in enumerate(recipes['recipes'][:5]):
                 print('[{0}] : {1}'.format(i+1, recipe['title']))
 
-    def get_recipe_id(self, query):
-        recipes=self.search_recipes(query)
+    def get_recipe_id(self, query, sortBy='r'):
+        recipes=self.search_recipes(query, sortBy)
         if recipes and 'recipes' in recipes and len(recipes['recipes'])>0:
             return(recipes['recipes'][0]['recipe_id'])
         else:
