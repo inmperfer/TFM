@@ -2,6 +2,7 @@
 # coding=utf-8
 
 import pprint
+import os.path
 import os
 import time
 import psycopg2
@@ -100,8 +101,10 @@ class SmartFridge():
         print('\n\nINPUT = {}\n'.format(command))
 
         # Processing of the response
+        if command == 'download_file_format_error':
+            response = 'The file extension is not valid. Try with JPG or PNG.'
         # Visual recognition
-        if command.startswith('photo'):
+        elif command.startswith('photo'):
             self.send_response('Please, give me a second... :hourglass_flowing_sand:')
             self.context['image_recipe'] = "true"
             response_text, intent, entity=self.update_conversation_context()
@@ -325,8 +328,12 @@ class SmartFridge():
 
                 elif output and 'file' in output and 'url_private_download' in output['file']:
                     down_url = output['file']['url_private_download']
-                    self.download_file(down_url, 'download/food.jpg', 'download')
-                    return 'photo', output['channel']
+                    extension = os.path.splitext(down_url)[1][1:].strip().lower()
+                    if extension in ['jpg', 'png']:
+                        self.download_file(down_url, 'download/food.jpg', 'download')
+                        return 'photo', output['channel']
+                    else:
+                        return 'download_file_format_error', output['channel']
 
         return None, None
 
