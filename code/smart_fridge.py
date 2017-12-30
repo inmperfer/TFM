@@ -171,31 +171,65 @@ class SmartFridge():
 
     # Prioritizes the use of ingredients that are about to expire
     # Excludes expired products
-    def yum_suggestion(self):
-        ingredients = []
-        #response = 'yumyumBot suggestion with the available ingredients or the trending recipe of the day'
+    def yum_suggestion(self, n_options=6):
+        header = 'I have found the following recipes for you:'
+        response = ''
 
-        # Obtain the 2 products with the closest expiration date and that are in more quantity
+        if n_options > 0:
+            options = []
+            available_ingredients_options = []
+            top_rated_options = []
+            trending_options = []
+
+            # n_recipes recipe suggestion by using the n_ingredients with closest expiration date and biggest quantity
+            available_ingredients_options = self.get_recipe_options_from_available_ingredients(n_options=2, n_ingredients=2)
+            top_rated_options = self.get_top_rated_recipe_options(n_options=2)
+            trending_options = self.get_trending_recipe_options(n_options=2)
+
+            options = available_ingredients_options + top_rated_options + trending_options
+            print(options)
+            for i, recipe in enumerate(options[:n_options]):
+                response = response + '\n' + '[{0}] :  {1}'.format(i+1, recipe)
+
+        if response == '':
+            response = ':disappointed: Sorry, no recipes found for your request. Please, try a new search'
+        else:
+            response = header + response
+
+        return response
+
+
+
+    def get_recipe_options_from_available_ingredients(self, n_options=2, n_ingredients=2):
+        ingredients = []
+        options = []
+
+        # IMPROVEMENT: add to the query the register user intolerances
+        ingredients = self.get_top_expired_ingredients_from_db(n_ingredients)
+
+        if len(ingredients) > 0:
+            query = ', '.join(map(str, ingredients))
+            recipes = self.search_recipes(query)
+
+        if recipes and 'recipes' in recipes:
+            for recipe in recipes['recipes'][:n_options]:
+                options.append(recipe['title'])
+
+        return options
+
+
+    # Obtain the n_ingredients products with the closest expiration date and that are in more quantity
+    def get_top_expired_ingredients_from_db(self, n_ingredients=2):
+        ingredients = []
         db_query = 'SELECT name ' \
                     'FROM products ' \
                     'WHERE date(expiration_date) > current_date ' \
                     'ORDER by expiration_date ASC, quantity DESC ' \
-                    'LIMIT 2'
+                    'LIMIT {}'.format(n_ingredients)
 
         ingredients = self.fetch_content(db_query)
 
-        if len(ingredients) > 0:
-            query = ', '.join(map(str, ingredients))
-            response = self.get_ingredients(self.get_recipe_id(query))
-            # IMPROVEMENT: add to the query the register user intolerances
-        else:
-            response = self.get_top_rated_recipe()
-
-        print('top rated = {}'.format(self.get_top_rated_recipe()))
-        print('trending = {}'.format(self.get_trending_recipe()))
-
-        return response
-
+        return ingredients
 
 
     def suggest_dish(self):
@@ -429,19 +463,41 @@ class SmartFridge():
         return response
 
 
-    def get_top_rated_recipe(self):
-        return self.get_ingredients(self.get_recipe_id(''))
-
-    def get_trending_recipe(self):
-        return self.get_ingredients(self.get_recipe_id('', 't'))
-
-
     def get_recipe_id(self, query, sortBy='r'):
         recipes=self.search_recipes(query, sortBy)
         if recipes and 'recipes' in recipes and len(recipes['recipes'])>0:
             return(recipes['recipes'][0]['recipe_id'])
         else:
             return None
+
+    def get_top_rated_recipe(self):
+        return self.get_ingredients(self.get_recipe_id(''))
+
+
+    def get_top_rated_recipe_options(self, n_options=1):
+        options = []
+        recipes = self.search_recipes('')
+
+        if recipes and 'recipes' in recipes:
+            for recipe in recipes['recipes'][:n_options]:
+                options.append(recipe['title'])
+
+        return options
+
+
+    def get_trending_recipe(self):
+        return self.get_ingredients(self.get_recipe_id('', 't'))
+
+
+    def get_trending_recipe_options(self, n_options=1):
+        options = []
+        recipes = self.search_recipes('', sortBy='t')
+
+        if recipes and 'recipes' in recipes:
+            for recipe in recipes['recipes'][:n_options]:
+                options.append(recipe['title'])
+
+        return options
 
 
     ######   POSTGRES DATABASE ########
