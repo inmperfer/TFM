@@ -199,39 +199,6 @@ class SmartFridge():
         return response
 
 
-
-    def get_recipe_options_from_available_ingredients(self, n_options=2, n_ingredients=2):
-        ingredients = []
-        options = []
-
-        # IMPROVEMENT: add to the query the register user intolerances
-        ingredients = self.get_top_expired_ingredients_from_db(n_ingredients)
-
-        if len(ingredients) > 0:
-            query = ', '.join(map(str, ingredients))
-            recipes = self.search_recipes(query)
-
-        if recipes and 'recipes' in recipes:
-            for recipe in recipes['recipes'][:n_options]:
-                options.append(recipe['title'])
-
-        return options
-
-
-    # Obtain the n_ingredients products with the closest expiration date and that are in more quantity
-    def get_top_expired_ingredients_from_db(self, n_ingredients=2):
-        ingredients = []
-        db_query = 'SELECT name ' \
-                    'FROM products ' \
-                    'WHERE date(expiration_date) > current_date ' \
-                    'ORDER by expiration_date ASC, quantity DESC ' \
-                    'LIMIT {}'.format(n_ingredients)
-
-        ingredients = self.fetch_content(db_query)
-
-        return ingredients
-
-
     def suggest_dish(self):
         print('ingredients={0}, cuisine type={1}, intolerances={2}'.format(self.context['ingredients'],
                                                                            self.context['cuisine_type'],
@@ -500,6 +467,24 @@ class SmartFridge():
         return options
 
 
+    def get_recipe_options_from_available_ingredients(self, n_options=2, n_ingredients=2):
+        ingredients = []
+        options = []
+
+        # IMPROVEMENT: add to the query the register user intolerances
+        ingredients = self.get_top_expired_ingredients_from_db(n_ingredients)
+
+        if len(ingredients) > 0:
+            query = ', '.join(map(str, ingredients))
+            recipes = self.search_recipes(query)
+
+        if recipes and 'recipes' in recipes:
+            for recipe in recipes['recipes'][:n_options]:
+                options.append(recipe['title'])
+
+        return options
+
+
     ######   POSTGRES DATABASE ########
 
     def database_connection(self):
@@ -523,6 +508,18 @@ class SmartFridge():
         return(record_list)
 
 
+    # Obtain the n_ingredients products with the closest expiration date and that are in more quantity
+    def get_top_expired_ingredients_from_db(self, n_ingredients=2):
+        ingredients = []
+        db_query = 'SELECT name ' \
+                    'FROM products ' \
+                    'WHERE date(expiration_date) > current_date ' \
+                    'ORDER by expiration_date ASC, quantity DESC ' \
+                    'LIMIT {}'.format(n_ingredients)
+
+        ingredients = self.fetch_content(db_query)
+
+        return ingredients
 
 
 ######   MAIN ########
