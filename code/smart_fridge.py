@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # coding=utf-8
 
+######   LIBRARIES ########
 import pprint
-import os.path
 import os
 import time
 import psycopg2
@@ -75,20 +75,12 @@ class SmartFridge():
         self.visual_recognition = VisualRecognition(version=VISUAL_RECOGNITION_VERSION,
                                                     url=VISUAL_RECOGNITION_URL,
                                                     api_key=VISUAL_RECOGNITION_KEY)
+        # Database cursor
         self.database_cursor = None
 
 
-    def fetch_content(self, query):
-        # execute Query
-        self.database_cursor.execute(query)
 
-        # retrieve the records from the database
-        records = self.database_cursor.fetchall()
-        record_list=[]
-        for r in records:
-            record_list.append(r[0])
-        return(record_list)
-
+    ######   CONVERSATION MANAGEMENT ########
 
     def handle_command(self, command, channel):
         """
@@ -123,7 +115,7 @@ class SmartFridge():
                                 self.send_response(response)
                                 response= '\n' + smartfridge.get_ingredients(self.get_recipe_id(food))
                             else:
-                                response ='I am sorry, but I do not recognize anything edible in this image. Try with a another one.'
+                                response ='Are you sure it is edible? I do not recognize food in this image. \nPlease Try with a another one.'
 
         else:
             response_text, intent, entity = self.msg_to_conversation(command)
@@ -205,11 +197,6 @@ class SmartFridge():
         return response
 
 
-    def get_top_rated_recipe(self):
-        return self.get_ingredients(self.get_recipe_id(''))
-
-    def get_trending_recipe(self):
-        return self.get_ingredients(self.get_recipe_id('', 't'))
 
     def suggest_dish(self):
         print('ingredients={0}, cuisine type={1}, intolerances={2}'.format(self.context['ingredients'],
@@ -286,21 +273,6 @@ class SmartFridge():
         return(header + recap + footer)
 
 
-
-
-    def send_response(self, response):
-        # Provide response
-        self.slack_client.api_call("chat.postMessage",
-                                   channel=channel,
-                                   text=response,
-                                   as_user=True)
-
-
-    def update_conversation_context(self):
-        print('update_conversation_context')
-        return self.msg_to_conversation('')
-
-
     def get_recipe(self):
         recipe = ':disappointed: Sorry, no recipes found for your request. Please, try a new search'
         print('dish = {}'.format(self.context['dish']))
@@ -310,7 +282,63 @@ class SmartFridge():
             recipe=self.get_ingredients(self.get_recipe_id(self.context['dish']))
         return recipe
 
+    def update_conversation_context(self):
+        print('update_conversation_context')
+        return self.msg_to_conversation('')
 
+
+    def msg_to_conversation(self, input_message):
+        message = {}
+        intent = ''
+        entity = ''
+        response_text = ''
+
+        if (input_message != ''):
+            message['text'] = input_message
+
+        response = self.conversation.message(workspace_id=CONVERSATION_WORKSPACE,
+                                             message_input=message,
+                                             context=self.context,
+                                             alternate_intents=False)
+
+        self.update_local_context(response['context'])
+        self.intents = response['intents']
+        self.entities = response['entities']
+
+        # Imprime la intencion y la entidad detectada
+        if (len(self.intents) > 0 and len(self.entities) > 0):
+            print('#{0}  (@{1}:{2})'.format(self.intents[0]['intent'], self.entities[0]['entity'],
+                                            self.entities[0]['value']))
+            intent = self.intents[0]['intent']
+            entity = self.entities[0]['entity']
+        elif (len(self.intents) > 0):
+            print('#{0}'.format(self.intents[0]['intent']))
+            intent = self.intents[0]['intent']
+        elif (len(self.entities) > 0):
+            print('@{0}:{1}'.format(self.entities[0]['entity'], self.entities[0]['value']))
+            entity = self.entities[0]['entity']
+
+        if (response["output"] and response["output"]["text"]):
+            for r in response["output"]["text"]:
+                response_text = response_text + '\n' + r
+
+        return response_text, intent, entity
+
+    def update_local_context(self, context):
+        self.context = context
+        for key, value in self.context.items():
+            print('{0} = {1}'.format(key, value))
+        print('\n')
+
+
+
+    ######   SLACK ########
+    def send_response(self, response):
+        # Provide response
+        self.slack_client.api_call("chat.postMessage",
+                                   channel=channel,
+                                   text=response,
+                                   as_user=True)
 
     def parse_slack_output(self, slack_rtm_output):
         """
@@ -337,61 +365,6 @@ class SmartFridge():
 
         return None, None
 
-
-
-
-    def msg_to_conversation(self, input_message):
-        message = {}
-        intent = ''
-        entity = ''
-        response_text= ''
-
-        if(input_message != ''):
-            message['text'] = input_message
-
-        response = self.conversation.message(workspace_id = CONVERSATION_WORKSPACE,
-                                             message_input = message,
-                                             context = self.context,
-                                             alternate_intents = False)
-
-        self.update_local_context(response['context'])
-        self.intents = response['intents']
-        self.entities = response['entities']
-
-        # Imprime la intencion y la entidad detectada
-        if(len(self.intents) > 0 and len(self.entities)>0 ):
-            print('#{0}  (@{1}:{2})'.format(self.intents[0]['intent'], self.entities[0]['entity'], self.entities[0]['value']))
-            intent = self.intents[0]['intent']
-            entity = self.entities[0]['entity']
-        elif(len(self.intents) > 0):
-            print('#{0}'.format(self.intents[0]['intent']))
-            intent = self.intents[0]['intent']
-        elif(len(self.entities)>0 ):
-            print('@{0}:{1}'.format(self.entities[0]['entity'], self.entities[0]['value']))
-            entity = self.entities[0]['entity']
-
-        if(response["output"] and response["output"]["text"]):
-            for r in response["output"]["text"]:
-                response_text = response_text + '\n' + r
-
-        return response_text, intent, entity
-
-
-    def update_local_context(self, context):
-        self.context = context
-        for key, value in self.context.items():
-            print('{0} = {1}'.format(key, value))
-        print('\n')
-
-
-    def database_connection(self):
-        print('Connecting to database ... ')
-
-        # get a connection, if a connect cannot be made an exception will be raised here
-        db_conn = psycopg2.connect(DB_STRING_CONNECTION)
-
-        # conn.cursor will return a cursor object, you can use this cursor to perform queries
-        self.database_cursor = db_conn.cursor()
 
     def _urlHelper(self, endpoint, **kwargs):
         data = {'key': FOOD2FORK_KEY}
@@ -420,8 +393,9 @@ class SmartFridge():
 
         return True
 
-#######   FOOD2FORK    #######
 
+
+    #######   FOOD2FORK    #######
 
     def search_recipes(self, query, sortBy='r'):
         endpoint = 'http://food2fork.com/api/search'
@@ -455,13 +429,12 @@ class SmartFridge():
         return response
 
 
+    def get_top_rated_recipe(self):
+        return self.get_ingredients(self.get_recipe_id(''))
 
+    def get_trending_recipe(self):
+        return self.get_ingredients(self.get_recipe_id('', 't'))
 
-    def get_recipes_from_ingredients(self, ingredients):
-        recipes=self.search_recipes(ingredients)
-        if recipes and 'recipes' in recipes:
-            for i, recipe in enumerate(recipes['recipes'][:5]):
-                print('[{0}] : {1}'.format(i+1, recipe['title']))
 
     def get_recipe_id(self, query, sortBy='r'):
         recipes=self.search_recipes(query, sortBy)
@@ -470,17 +443,33 @@ class SmartFridge():
         else:
             return None
 
-    def get_recipes_from_database(self):
-        recipe_ids=[]
-        query="SELECT name FROM products"
-        db_products=self.fetch_content(query)
-        for product in db_products:
-            id=self.get_recipe_id(product)
-            if id not in recipe_ids:
-                recipe_ids.append(id)
+
+    ######   POSTGRES DATABASE ########
+
+    def database_connection(self):
+        print('Connecting to database ... ')
+
+        # get a connection, if a connect cannot be made an exception will be raised here
+        db_conn = psycopg2.connect(DB_STRING_CONNECTION)
+
+        # conn.cursor will return a cursor object, you can use this cursor to perform queries
+        self.database_cursor = db_conn.cursor()
+
+    def fetch_content(self, query):
+        # execute Query
+        self.database_cursor.execute(query)
+
+        # retrieve the records from the database
+        records = self.database_cursor.fetchall()
+        record_list=[]
+        for r in records:
+            record_list.append(r[0])
+        return(record_list)
 
 
-####   MAIN  ####
+
+
+######   MAIN ########
 if __name__ == "__main__":
     smartfridge=SmartFridge()
     smartfridge.database_connection()
