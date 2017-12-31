@@ -48,18 +48,21 @@ class SmartFridge():
         self.context = {}
         self.intents = []
         self.entities = []
+        self.recipe_options = []
 
         # Enviroment variables
         self.context['search_recipe'] = False
         self.context['image_recipe'] = False
         self.context['suggest_dish'] = False
         self.context['yum_sugest'] = False
+        self.context['option'] = None
         self.context['cuisine_type'] = None
         self.context['ingredients'] = None
         self.context['intolerances'] = None
         self.context['dish'] = None
         self.context['counter'] = 0
         self.context['insult_counter'] = 0
+
 
 
         #  Slack client instance
@@ -157,6 +160,14 @@ class SmartFridge():
                 self.send_response('I\'ll make a recap for you... \n\n')
                 response = self.analize_content()
 
+            # SELECT_OPTION
+            elif intent == 'select_option':
+                option_response = self.select_option()
+                if option_response != '':
+                    response = option_response
+                else:
+                    response = response_text
+
             # NEGATIVE_REACTION
             elif intent == 'negative_reaction':
                 response = response_text
@@ -169,14 +180,29 @@ class SmartFridge():
         self.send_response(response)
 
 
+    def select_option(self):
+        response = ''
+        if (self.context['option']!= None) and (len(self.recipe_options) > 0):
+            self.recipe_options = []
+            response = 'Ok, good choice, search the recipe, option = {}'.format(self.context['option'])
+
+        return response
+
+
+
+
     # Prioritizes the use of ingredients that are about to expire
     # Excludes expired products
     def yum_suggestion(self, n_options=6):
         header = 'I have found the following recipes for you:'
         response = ''
+        footer = 'Please, provide a valid option from 1 to 6'
+        
+        self.recipe_options= []
+        self.context['yum_sugest'] = False
 
         if n_options > 0:
-            options = []
+
             available_ingredients_options = []
             top_rated_options = []
             trending_options = []
@@ -186,15 +212,16 @@ class SmartFridge():
             top_rated_options = self.get_top_rated_recipe_options(n_options=2)
             trending_options = self.get_trending_recipe_options(n_options=2)
 
-            options = available_ingredients_options + top_rated_options + trending_options
-            print(options)
-            for i, recipe in enumerate(options[:n_options]):
+            self.recipe_options = available_ingredients_options + top_rated_options + trending_options
+            print(self.recipe_options)
+            for i, recipe in enumerate(self.recipe_options[:n_options]):
                 response = response + '\n' + '[{0}] :  {1}'.format(i+1, recipe)
 
         if response == '':
             response = ':disappointed: Sorry, no recipes found for your request. Please, try a new search'
         else:
-            response = header + response
+            response = header + '\n' + response + '\n' + footer
+
 
         return response
 
