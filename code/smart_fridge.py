@@ -45,13 +45,14 @@ DAYS_TO_EXPIRE = 7
 TOTAL_NUMBER_OPTIONS = 6
 
 
-
 class SmartFridge():
     def __init__(self):
         self.context = {}
+        self.option_dict = {}
         self.intents = []
         self.entities = []
         self.recipe_options = []
+
 
         # Enviroment variables
         self.context['search_recipe'] = False
@@ -170,10 +171,26 @@ class SmartFridge():
     def select_option(self):
         response = ''
         if (self.context['option']!= None) and (len(self.recipe_options) > 0):
-            self.recipe_options = []
-            response = 'Ok, good choice, search the recipe, option = {}'.format(self.context['option'])
+            index = self.parse_to_valid_index(self.context['option'])
+            if index != None:
+                selection = self.recipe_options[index]
+                response = 'Ok, good choice! The {} recipe below: '.format(selection)
+                response = response + '\n' + self.get_ingredients(self.option_dict[selection])
+                self.recipe_options = []
 
         return response
+
+
+    def parse_to_valid_index(self, opt):
+        value = None
+
+        if opt in range(1, TOTAL_NUMBER_OPTIONS+1):
+            value = opt - 1
+        else:
+            value = None
+
+        return value
+
 
 
     # Prioritizes the use of ingredients that are about to expire
@@ -485,6 +502,7 @@ class SmartFridge():
         if recipes and 'recipes' in recipes:
             for recipe in recipes['recipes'][:n_options]:
                 options.append(recipe['title'])
+                self.option_dict[recipe['title']] = recipe['recipe_id']
 
         return options
 
@@ -500,6 +518,7 @@ class SmartFridge():
         if recipes and 'recipes' in recipes:
             for recipe in recipes['recipes'][:n_options]:
                 options.append(recipe['title'])
+                self.option_dict[recipe['title']] = recipe['recipe_id']
 
         return options
 
@@ -518,6 +537,7 @@ class SmartFridge():
         if recipes and 'recipes' in recipes:
             for recipe in recipes['recipes'][:n_options]:
                 options.append(recipe['title'])
+                self.option_dict[recipe['title']]=recipe['recipe_id']
 
         return options
 
