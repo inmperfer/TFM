@@ -42,6 +42,7 @@ CONVERSATION_URL = 'https://gateway.watsonplatform.net/conversation/api'
 CONVERSATION_WORKSPACE = os.environ.get('CONVERSATION_WORKSPACE')
 
 DAYS_TO_EXPIRE = 7
+TOTAL_NUMBER_OPTIONS = 6
 
 class SmartFridge():
     def __init__(self):
@@ -197,7 +198,7 @@ class SmartFridge():
         header = 'I have found the following recipes for you:'
         response = ''
         footer = 'Please, provide a valid option from 1 to 6'
-        
+
         self.recipe_options= []
         self.context['yum_sugest'] = False
 
@@ -209,8 +210,11 @@ class SmartFridge():
 
             # n_recipes recipe suggestion by using the n_ingredients with closest expiration date and biggest quantity
             available_ingredients_options = self.get_recipe_options_from_available_ingredients(n_options=2, n_ingredients=2)
-            top_rated_options = self.get_top_rated_recipe_options(n_options=2)
-            trending_options = self.get_trending_recipe_options(n_options=2)
+            
+            top_rated_options = self.get_top_rated_recipe_options(n_options=((TOTAL_NUMBER_OPTIONS - len(available_ingredients_options)) // 2)
+                                                                            + ((TOTAL_NUMBER_OPTIONS - len(available_ingredients_options)) % 2))
+
+            trending_options = self.get_trending_recipe_options(n_options=((TOTAL_NUMBER_OPTIONS - len(available_ingredients_options)) // 2))
 
             self.recipe_options = available_ingredients_options + top_rated_options + trending_options
             print(self.recipe_options)
