@@ -44,6 +44,8 @@ CONVERSATION_WORKSPACE = os.environ.get('CONVERSATION_WORKSPACE')
 DAYS_TO_EXPIRE = 7
 TOTAL_NUMBER_OPTIONS = 6
 
+
+
 class SmartFridge():
     def __init__(self):
         self.context = {}
@@ -99,28 +101,12 @@ class SmartFridge():
         # Processing of the response
         if command == 'download_file_format_error':
             response = 'The file extension is not valid. Try with JPG or PNG.'
-        # Visual recognition
+        # Food image recognition
         elif command.startswith('photo'):
             self.send_response('Please, give me a second... :hourglass_flowing_sand:')
             self.context['image_recipe'] = "true"
             response_text, intent, entity=self.update_conversation_context()
-
-            with open('./download/food.jpg', 'rb') as image_file:
-                vr_response = self.visual_recognition.classify(images_file=image_file, classifier_ids=['food'])
-                if vr_response['images'] and len(vr_response['images'])>0:
-                    image= vr_response['images'][0]
-                    if image['classifiers'] and len(image['classifiers'])>0:
-                        classifier=image['classifiers'][0]
-                        if classifier['classes'] and len(classifier['classes'])>0:
-                            food=classifier['classes'][0]['class']
-                            score=classifier['classes'][0]['score']
-                            if (food != 'non-food'):
-                                response='Uhm... :yum: :yum: :yum: This looks really good. I think (score: {1}) it is... *{0}*'.format(food, score)
-                                self.send_response(response)
-                                response= '\n' + smartfridge.get_ingredients(self.get_recipe_id(food))
-                            else:
-                                response ='Are you sure it is edible? I do not recognize food in this image. \nPlease Try with a another one.'
-
+            response = self.image_food_recognition()
         else:
             response_text, intent, entity = self.msg_to_conversation(command)
             print('intent = {} '.format(intent))
@@ -190,8 +176,6 @@ class SmartFridge():
         return response
 
 
-
-
     # Prioritizes the use of ingredients that are about to expire
     # Excludes expired products
     def yum_suggestion(self, n_options=6):
@@ -210,7 +194,7 @@ class SmartFridge():
 
             # n_recipes recipe suggestion by using the n_ingredients with closest expiration date and biggest quantity
             available_ingredients_options = self.get_recipe_options_from_available_ingredients(n_options=2, n_ingredients=2)
-            
+
             top_rated_options = self.get_top_rated_recipe_options(n_options=((TOTAL_NUMBER_OPTIONS - len(available_ingredients_options)) // 2)
                                                                             + ((TOTAL_NUMBER_OPTIONS - len(available_ingredients_options)) % 2))
 
@@ -337,7 +321,7 @@ class SmartFridge():
         self.intents = response['intents']
         self.entities = response['entities']
 
-        # Imprime la intencion y la entidad detectada
+        # Print intent and entity
         if (len(self.intents) > 0 and len(self.entities) > 0):
             print('#{0}  (@{1}:{2})'.format(self.intents[0]['intent'], self.entities[0]['entity'],
                                             self.entities[0]['value']))
@@ -361,6 +345,28 @@ class SmartFridge():
         for key, value in self.context.items():
             print('{0} = {1}'.format(key, value))
         print('\n')
+
+
+
+    ######   VISUAL RECOGNITION ########
+    def image_food_recognition(self):
+        response = response = 'Are you sure it is edible? I do not recognize food in this image. \nPlease Try with a another one.'
+
+        with open('./download/food.jpg', 'rb') as image_file:
+            vr_response = self.visual_recognition.classify(images_file=image_file, classifier_ids=['food'])
+            if vr_response['images'] and len(vr_response['images']) > 0:
+                image = vr_response['images'][0]
+                if image['classifiers'] and len(image['classifiers']) > 0:
+                    classifier = image['classifiers'][0]
+                    if classifier['classes'] and len(classifier['classes']) > 0:
+                        food = classifier['classes'][0]['class']
+                        score = classifier['classes'][0]['score']
+                        if (food != 'non-food'):
+                            response = 'Uhm... :yum: :yum: :yum: This looks really good. I think (score: {1}) it is... *{0}*'.format(food, score)
+                            self.send_response(response)
+                            response = '\n' + smartfridge.get_ingredients(self.get_recipe_id(food))
+
+        return response
 
 
 
