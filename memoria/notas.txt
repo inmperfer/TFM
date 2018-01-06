@@ -3,6 +3,17 @@ COSAS A MENCINAR
 
 - problema aleatorio con slack
 
+- videos del niño tanmay bakshi
+
+Cortana Intelligenge Suite into fridges
+https://blogs.technet.microsoft.com/machinelearning/2016/09/02/microsoft-and-liebherr-collaborating-on-new-generation-of-smart-refrigerators/
+https://blogs.technet.microsoft.com/machinelearning/2016/10/25/how-to-train-a-deep-learned-object-detection-model-in-cntk/
+https://www.theverge.com/2016/12/13/13935136/microsoft-cortana-windows-10-iot-devices
+https://techcrunch.com/2016/09/02/microsoft-is-putting-cortana-machine-learning-in-a-fridge/
+https://www.makeuseof.com/tag/microsoft-cortana-fridge-out-of-milk/
+
+Fridge Chatbot - Promo Video
+
 
 MEJORAS
 - utiliza la entidad del sistema @sys-person para extraer el nombre del usuario de la entrada 
@@ -16,6 +27,12 @@ MEJORAS
 - cuando el usuario le pregunte si tiene ingredientes suficientes que responda que es una primera versión y que no puede contestar a eso, que está estudiando para ello
 
 -  ingredientes como lista
+
+- codificación de las recetas, por ejemplo 1/2 lo devuelve como &frac12;
+
+- Entrenar con los platos que devuelva si no los conoce y con las intolerancias que comparta el usuario
+
+
 
 INTERFAZ CONVERSACION
 mover, duplicar, deshacer cambios en la conversacion

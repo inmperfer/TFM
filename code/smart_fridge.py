@@ -153,9 +153,10 @@ class SmartFridge():
             elif intent=='available_ingredients':
                 ingredients = self.context['ingredients']
                 if ingredients != None:
+                    self.send_response(response_text)
                     response = self.get_ingredients_information(ingredients)
                 else:
-                    self.send_response('I\'ll make a recap for you... \n\n')
+                    self.send_response(response_text)
                     response = self.get_db_summary()
 
             # AVAILABLE_INGREDIENTS
@@ -611,7 +612,7 @@ class SmartFridge():
                         info = info + '\n' + 'The {0} expired the day {1}. Throw out it!'.format(r[0],
                                                                                                  r[1].strftime("%d/%m/%Y"))
             else:
-                info = 'There are no {} left at home, write it down on the shopping list'.format(ingredients)
+                info = 'There are no {} left at home, write it down on the shopping list.'.format(ingredients)
         except:
             info = 'Sorry, we are having technical problems, please try again.'
 
