@@ -61,6 +61,7 @@ class SmartFridge():
         self.context['image_recipe'] = False
         self.context['suggest_dish'] = False
         self.context['yum_sugest'] = False
+        self.context['summary'] = False
         self.context['option'] = None
         self.context['cuisine_type'] = None
         self.context['ingredients'] = None
@@ -126,6 +127,9 @@ class SmartFridge():
                 self.send_response(response_text)
                 response = self.suggest_dish()
 
+            elif(self.context['summary'] == 'true'):
+                self.send_response(response_text)
+                response = self.get_db_summary()
 
             # GET_RECIPE
             elif intent == 'get_recipe':
@@ -153,6 +157,10 @@ class SmartFridge():
                 else:
                     self.send_response('I\'ll make a recap for you... \n\n')
                     response = self.get_db_summary()
+
+            # AVAILABLE_INGREDIENTS
+            elif intent == 'needed_ingredients':
+                response = response_text
 
             # SELECT_OPTION
             elif intent == 'select_option':
@@ -598,6 +606,7 @@ class SmartFridge():
                     if r[1].date() >= datetime.datetime.now().date():
                         info = info + '\n' + 'There are {0} grams of {1}, the expiration date is {2}'.\
                             format(round(r[2], 0), r[0], r[1].strftime("%d/%m/%Y"))
+                    # Expired product
                     else:
                         info = info + '\n' + 'The {0} expired the day {1}. Throw out it!'.format(r[0],
                                                                                                  r[1].strftime("%d/%m/%Y"))
@@ -605,7 +614,6 @@ class SmartFridge():
                 info = 'There are no {} left at home, write it down on the shopping list'.format(ingredients)
         except:
             info = 'Sorry, we are having technical problems, please try again.'
-            print ('get_ingredients_information exception')
 
         return info
 
