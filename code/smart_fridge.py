@@ -5,6 +5,7 @@
 import pprint
 import os
 import time
+import datetime
 import psycopg2
 import requests
 import urllib.request
@@ -38,8 +39,9 @@ VISUAL_RECOGNITION_KEY = os.environ.get('VISUAL_RECOGNITION_KEY')
 CONVERSATION_VERSION = '2017-09-23',
 CONVERSATION_USERNAME = os.environ.get('CONVERSATION_USERNAME')
 CONVERSATION_PASSWORD = os.environ.get('CONVERSATION_PASSWORD')
-CONVERSATION_URL = 'https://gateway.watsonplatform.net/conversation/api'
 CONVERSATION_WORKSPACE = os.environ.get('CONVERSATION_WORKSPACE')
+CONVERSATION_URL = 'https://gateway.watsonplatform.net/conversation/api'
+
 
 DAYS_TO_EXPIRE = 7
 TOTAL_NUMBER_OPTIONS = 6
@@ -145,8 +147,12 @@ class SmartFridge():
 
             # AVAILABLE_INGREDIENTS
             elif intent=='available_ingredients':
-                self.send_response('I\'ll make a recap for you... \n\n')
-                response = self.analize_content()
+                ingredients = self.context['ingredients']
+                if ingredients != None:
+                    response = self.get_ingredients_information(ingredients)
+                else:
+                    self.send_response('I\'ll make a recap for you... \n\n')
+                    response = self.get_db_summary()
 
             # SELECT_OPTION
             elif intent == 'select_option':
@@ -254,7 +260,7 @@ class SmartFridge():
         return response
 
 
-    def analize_content(self):
+    def get_db_summary(self):
         all_products = []
         expired_products = []
         products_to_expire = []
@@ -578,6 +584,30 @@ class SmartFridge():
 
         return ingredients
 
+    def get_ingredients_information(self, ingredients):
+        info = ""
+        query = "SELECT name, expiration_date, quantity " \
+                "FROM products " \
+                "WHERE name like '%{}%'".format(ingredients)
+        try:
+            self.database_cursor.execute(query)
+            records = self.database_cursor.fetchall()
+            if len(records)>0:
+                for r in records:
+                    # Not expired product
+                    if r[1].date() >= datetime.datetime.now().date():
+                        info = info + '\n' + 'There are {0} grams of {1}, the expiration date is {2}'.\
+                            format(round(r[2], 0), r[0], r[1].strftime("%d/%m/%Y"))
+                    else:
+                        info = info + '\n' + 'The {0} expired the day {1}. Throw out it!'.format(r[0],
+                                                                                                 r[1].strftime("%d/%m/%Y"))
+            else:
+                info = 'There are no {} left at home, write it down on the shopping list'.format(ingredients)
+        except:
+            info = 'Sorry, we are having technical problems, please try again.'
+            print ('get_ingredients_information exception')
+
+        return info
 
 ######   MAIN ########
 if __name__ == "__main__":
