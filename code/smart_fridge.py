@@ -382,7 +382,7 @@ class SmartFridge():
 
     ######   VISUAL RECOGNITION ########
     def image_food_recognition(self):
-        response = response = 'Are you sure it is edible? I do not recognize food in this image. \nPlease Try with a another one.'
+        response = response = 'Are you sure it is edible? I do not recognize food in this image. \nPlease, try with another one.'
 
         with open('./download/food.jpg', 'rb') as image_file:
             vr_response = self.visual_recognition.classify(images_file=image_file, classifier_ids=['food'])
