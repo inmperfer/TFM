@@ -56,5 +56,10 @@ puedo quitar una letra y no avisa, esto dificulta la depuracion, porque hay que 
 Cuidado con el orden de las condiciones en el slot, y tambien he comprobado que es necesario añadir una frase en "If $variable is not present then ask:". Aun están en beta y no están muy depurados, 
 si dejas una respuesta vacía para que no responda nada, porque lo unico que quieres es incrementar el contador entonces no funciona correctamente. Desaparecen botones de volver o guardar.
 
+	Decidir la siguiente respuesta del sistema: ¿qué información dar? Historia del diálogo ¿de dónde obtenerla? Manejar diversas fuentes de información.
+	Gestionar la interacción: iniciativa del diálogo.
+	Recuperación de errores: ¿se ha entendido bien la petición del usuario? ¿Cómo corregirla? Estrategias de confirmación.
+	Mantener historia del diálogo: ¿qué información es necesario almacenar? ¿Cómo?
+	Aspectos avanzados: aprender de la experiencia. Estrategias adaptativas. Estrategias predictivas.
 
   
