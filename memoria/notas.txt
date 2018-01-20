@@ -63,3 +63,15 @@ si dejas una respuesta vacía para que no responda nada, porque lo unico que qui
 	Aspectos avanzados: aprender de la experiencia. Estrategias adaptativas. Estrategias predictivas.
 
   
+Recomendaciones técnicas
+Cada paso del diálogo tiene miles de posibles respuestas por parte del usuario, por muy buen trabajo de diseño del diálogo que hayamos hecho es imposible conocer todas las respuestas o caminos que puede tomar la conversación. Por ello es vital registrar qué responde el usuario en qué pasos, a fin de re-programar (entrenar) nuestro chatbot para que pueda procesar esas respuestas y tomar decisiones (añadirla a la lista de posibles respuestas, crear un nuevo paso del diálogo, volver a un estado anterior, etc.).
+
+Enviar iconos o gifs para hacer que las conversaciones parezcan más fluidas y menos programada. Elemento visual que refuerza la comunicación.
+Economía del lenguaje
+
+
+Sugerir posibles respuestas al usuario para que de forma casi inconsciente nos facilite el trabajo es súper importante.
+
+
+desbalanceo de los ejemplos, por ejemplo con negative_reactions
+
