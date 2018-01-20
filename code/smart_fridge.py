@@ -131,6 +131,10 @@ class SmartFridge():
                 self.send_response(response_text)
                 response = self.get_db_summary()
 
+            elif(self.context['search_recipe'] == 'true'):
+                self.send_response(response_text)
+                response = self.get_recipe()
+
             # GET_RECIPE
             elif intent == 'get_recipe':
                 if(self.context['search_recipe'] == 'true'):
