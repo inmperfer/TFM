@@ -266,6 +266,7 @@ class SmartFridge():
             if self.context['intolerances'] != None:
                 query = query + ' ' + self.context['intolerances']
 
+
             if query != '':
                 print('Buscando receta para: << {} >>'.format(query))
                 response = self.get_ingredients(self.get_recipe_id(query))
@@ -497,7 +498,8 @@ class SmartFridge():
                 source = '\nHere, you can find the *method of cooking*: {}'.format(recipe['recipe']['source_url'])
                 for ingredient in (recipe['recipe']['ingredients']):
                     ingredients.append(ingredient)
-                    str_ingredients= '\nTo cook this dish you need the following *ingredients*:' + '\n\n   - {}'.format('\n    - '.join(map(str, ingredients)))
+                    str_ingredients= '\nI found *{}*. To cook this you need the following *ingredients*:'.format(recipe['recipe']['title']) + \
+                                     '\n\n   - {}'.format('\n    - '.join(map(str, ingredients)))
                 response = str_ingredients + '\n' + source
 
         return response
