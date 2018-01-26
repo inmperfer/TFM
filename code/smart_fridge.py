@@ -16,34 +16,42 @@ from watson_developer_cloud import ConversationV1 as Conversation
 
 ######   CONSTANTS ########
 
-# smartfridge's ID as an environment variable
+# Slack bot id
 BOT_ID = os.environ.get("BOT_ID")
-
+# Slack token
 SLACK_BOT_TOKEN=os.environ.get('SLACK_BOT_TOKEN')
-
+# String to identify messages with bot as recipient
 AT_BOT = "<@" + BOT_ID + ">"
-
-# 1 second delay between reading from firehose
+# Delay between reading from firehose
 READ_WEBSOCKET_DELAY = 1
 
-# Get key to request Food2fork API
+# Food2fork API key
 FOOD2FORK_KEY=os.environ.get('FOOD2FORK_KEY')
 
-# Define our connection string
+# Postgres database connection string
 DB_STRING_CONNECTION = "host='localhost' dbname='smartfridge' user='postgres' password='postgres'"
 
+# Watson Visual Recognition version (to ensure backward compatibility)
 VISUAL_RECOGNITION_VERSION = '2017-10-15'
+# Watson Visual Recognition base url
 VISUAL_RECOGNITION_URL = 'https://gateway-a.watsonplatform.net/visual-recognition/api'
+# Watson Visual Recognition API key
 VISUAL_RECOGNITION_KEY = os.environ.get('VISUAL_RECOGNITION_KEY')
 
-CONVERSATION_VERSION = '2017-09-23',
+# Watson Conversation version (to ensure backward compatibility)
+CONVERSATION_VERSION = '2017-09-23'
+# Watson Conversation username
 CONVERSATION_USERNAME = os.environ.get('CONVERSATION_USERNAME')
+# Watson Conversation password
 CONVERSATION_PASSWORD = os.environ.get('CONVERSATION_PASSWORD')
+# Watson Conversation workspace identifier
 CONVERSATION_WORKSPACE = os.environ.get('CONVERSATION_WORKSPACE')
+# Watson Conversation base url
 CONVERSATION_URL = 'https://gateway.watsonplatform.net/conversation/api'
 
-
+# Number of remaining days to consider a product as next to expire
 DAYS_TO_EXPIRE = 7
+# Number of dish options provided to the user
 TOTAL_NUMBER_OPTIONS = 6
 
 
@@ -54,9 +62,11 @@ class SmartFridge():
         self.intents = []
         self.entities = []
         self.recipe_options = []
+        self.database_cursor = None
 
 
-        # Enviroment variables
+        # Reset enviroment variables
+
         self.context['search_recipe'] = False
         self.context['image_recipe'] = False
         self.context['suggest_dish'] = False
@@ -71,6 +81,7 @@ class SmartFridge():
         self.context['insult_counter'] = 0
 
 
+        # Services initialization
 
         #  Slack client instance
         self.slack_client = SlackClient(SLACK_BOT_TOKEN)
@@ -85,8 +96,8 @@ class SmartFridge():
         self.visual_recognition = VisualRecognition(version=VISUAL_RECOGNITION_VERSION,
                                                     url=VISUAL_RECOGNITION_URL,
                                                     api_key=VISUAL_RECOGNITION_KEY)
-        # Database cursor
-        self.database_cursor = None
+        # Database connection
+        self.database_connection()
 
 
 
@@ -441,14 +452,6 @@ class SmartFridge():
         return None, None
 
 
-    def _urlHelper(self, endpoint, **kwargs):
-        data = {'key': FOOD2FORK_KEY}
-
-        for key, value in kwargs.items():
-            data[key] = value
-
-        return endpoint + '?' + urllib.parse.urlencode(data)
-
 
     def download_file(self, url, local_filename, basedir):
         try:
@@ -471,17 +474,24 @@ class SmartFridge():
 
 
     #######   FOOD2FORK    #######
+    def food2fork_request(self, endpoint, **kwargs):
+        data = {'key': FOOD2FORK_KEY}
+
+        for key, value in kwargs.items():
+            data[key] = value
+
+        return endpoint + '?' + urllib.parse.urlencode(data)
 
     def search_recipes(self, query, sortBy='r'):
         endpoint = 'http://food2fork.com/api/search'
-        url = self._urlHelper(endpoint, q=query, sort=sortBy)
+        url = self.food2fork_request(endpoint, q=query, sort=sortBy)
         print(url)
         return requests.get(url).json()
 
     def get_recipe_from_id(self, recipeId):
         endpoint = 'http://food2fork.com/api/get'
         try:
-            url = self._urlHelper(endpoint, rId=recipeId)
+            url = self.food2fork_request(endpoint, rId=recipeId)
             print(url)
             return requests.get(url).json()
         except Exception as inst:
@@ -627,10 +637,6 @@ class SmartFridge():
 ######   MAIN ########
 if __name__ == "__main__":
     smartfridge=SmartFridge()
-    smartfridge.database_connection()
-
-    #ingredients = 'chicken, tomatoes, cheese, onion, egg'
-    #smartfridge.get_recipes_from_ingredients(ingredients)
 
     if smartfridge.slack_client.rtm_connect():
         print("smartfridge connected and running!")
