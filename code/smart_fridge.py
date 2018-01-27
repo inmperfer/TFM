@@ -97,7 +97,7 @@ class SmartFridge():
                                                     url=VISUAL_RECOGNITION_URL,
                                                     api_key=VISUAL_RECOGNITION_KEY)
         # Database connection
-        self.database_connection()
+        self.database_connection(DB_STRING_CONNECTION)
 
 
 
@@ -337,6 +337,18 @@ class SmartFridge():
         return(header + recap + footer)
 
 
+    def image_food_recognition(self):
+        food, score = self.get_food_from_image('./download/food.jpg')
+        if (food != 'non-food'):
+            response = 'Uhm... :yum: :yum: :yum: This looks really good. I think (score: {1}) it is... *{0}*'.format(food, score)
+            self.send_response(response)
+            response = '\n' + smartfridge.get_ingredients(self.get_recipe_id(food))
+        else:
+            response = 'Are you sure it is edible? I do not recognize food in this image. \nPlease, try with another one.'
+
+        return response
+
+
     def get_recipe(self):
         recipe = ':disappointed: Sorry, no recipes found for your request. Please, try a new search'
         print('dish = {}'.format(self.context['dish']))
@@ -345,6 +357,68 @@ class SmartFridge():
             print('Buscando receta para: << {} >>'.format(self.context['dish']))
             recipe=self.get_ingredients(self.get_recipe_id(self.context['dish']))
         return recipe
+
+    def get_ingredients(self, recipeId):
+        print('recipe id = {}'.format(recipeId))
+        response = ':disappointed: Sorry, no recipes found for your request. Please, try a new search'
+        if recipeId != None:
+            recipe = self.get_recipe_from_id(recipeId)
+            if recipe and 'recipe' in recipe:
+                ingredients=[]
+                source = '\nHere, you can find the *method of cooking*: {}'.format(recipe['recipe']['source_url'])
+                for ingredient in (recipe['recipe']['ingredients']):
+                    ingredients.append(ingredient)
+                    str_ingredients= '\nI found *{}*. To cook this you need the following *ingredients*:'.format(recipe['recipe']['title']) + \
+                                     '\n\n   - {}'.format('\n    - '.join(map(str, ingredients)))
+                response = str_ingredients + '\n' + source
+
+        return response
+
+
+
+    def get_ingredients_information(self, ingredients):
+        info = ""
+        try:
+            records = self.get_information_about_ingredients(ingredients)
+            if len(records)>0:
+                for r in records:
+                    # Not expired product
+                    if r[1].date() >= datetime.datetime.now().date():
+                        info = info + '\n' + 'There are {0} grams of {1}, the expiration date is {2}'.\
+                            format(round(r[2], 0), r[0], r[1].strftime("%d/%m/%Y"))
+                    # Expired product
+                    else:
+                        info = info + '\n' + 'The {0} expired the day {1}. Throw out it!'.format(r[0],
+                                                                                                 r[1].strftime("%d/%m/%Y"))
+            else:
+                info = 'There are no {} left at home, write it down on the shopping list.'.format(ingredients)
+        except:
+            info = 'Sorry, we are having technical problems, please try again.'
+
+        return info
+
+    def get_top_rated_recipe(self):
+        return self.get_ingredients(self.get_recipe_id(''))
+
+    def get_trending_recipe(self):
+        return self.get_ingredients(self.get_recipe_id('', 't'))
+
+    def get_recipe_options_from_available_ingredients(self, n_options=2, n_ingredients=2):
+        ingredients = []
+        options = []
+
+        # IMPROVEMENT: add to the query the register user intolerances
+        ingredients = self.get_top_expired_ingredients_from_db(n_ingredients)
+
+        if len(ingredients) > 0:
+            query = ', '.join(map(str, ingredients))
+            recipes = self.search_recipes(query)
+
+        if recipes and 'recipes' in recipes:
+            for recipe in recipes['recipes'][:n_options]:
+                options.append(recipe['title'])
+                self.option_dict[recipe['title']]=recipe['recipe_id']
+        return options
 
     def update_conversation_context(self):
         print('update_conversation_context')
@@ -397,10 +471,8 @@ class SmartFridge():
 
 
     ######   VISUAL RECOGNITION ########
-    def image_food_recognition(self):
-        response = response = 'Are you sure it is edible? I do not recognize food in this image. \nPlease, try with another one.'
-
-        with open('./download/food.jpg', 'rb') as image_file:
+    def get_food_from_image(self, image_path):
+        with open(image_path, 'rb') as image_file:
             vr_response = self.visual_recognition.classify(images_file=image_file, classifier_ids=['food'])
             if vr_response['images'] and len(vr_response['images']) > 0:
                 image = vr_response['images'][0]
@@ -409,48 +481,41 @@ class SmartFridge():
                     if classifier['classes'] and len(classifier['classes']) > 0:
                         food = classifier['classes'][0]['class']
                         score = classifier['classes'][0]['score']
-                        if (food != 'non-food'):
-                            response = 'Uhm... :yum: :yum: :yum: This looks really good. I think (score: {1}) it is... *{0}*'.format(food, score)
-                            self.send_response(response)
-                            response = '\n' + smartfridge.get_ingredients(self.get_recipe_id(food))
-
-        return response
+                        return food, score
+        return None, None
 
 
 
     ######   SLACK ########
-    def send_response(self, response):
-        # Provide response
-        self.slack_client.api_call("chat.postMessage",
-                                   channel=channel,
-                                   text=response,
-                                   as_user=True)
-
-    def parse_slack_output(self, slack_rtm_output):
-        """
-            The Slack Real Time Messaging API is an events firehose.
-            this parsing function returns None unless a message is
-            directed at the Bot, based on its ID.
-        """
-
+    """
+        The Slack Real Time Messaging API is an events firehose.
+        this parsing function returns None unless a message is
+        directed at the Bot, based on its ID.
+    """
+    def parse_slack_output(self, slack_rtm_output, download_path='download/food.jpg'):
         output_list = slack_rtm_output
         if output_list and len(output_list) > 0:
             for output in output_list:
                 if output and 'text' in output and AT_BOT in output['text']:
                     # return text after the @ mention, whitespace removed
                     return output['text'].split(AT_BOT)[1].strip().lower(), output['channel']
-
                 elif output and 'file' in output and 'url_private_download' in output['file']:
                     down_url = output['file']['url_private_download']
                     extension = os.path.splitext(down_url)[1][1:].strip().lower()
                     if extension in ['jpg', 'png']:
-                        self.download_file(down_url, 'download/food.jpg', 'download')
+                        self.download_file(down_url, download_path, 'download')
                         return 'photo', output['channel']
                     else:
                         return 'download_file_format_error', output['channel']
-
         return None, None
 
+    # Provide response
+    def send_response(self, response):
+        result = self.slack_client.api_call("chat.postMessage",
+                                            channel=channel,
+                                            text=response,
+                                            as_user=True)
+        return result
 
 
     def download_file(self, url, local_filename, basedir):
@@ -476,17 +541,17 @@ class SmartFridge():
     #######   FOOD2FORK    #######
     def food2fork_request(self, endpoint, **kwargs):
         data = {'key': FOOD2FORK_KEY}
-
         for key, value in kwargs.items():
             data[key] = value
-
         return endpoint + '?' + urllib.parse.urlencode(data)
+
 
     def search_recipes(self, query, sortBy='r'):
         endpoint = 'http://food2fork.com/api/search'
         url = self.food2fork_request(endpoint, q=query, sort=sortBy)
         print(url)
         return requests.get(url).json()
+
 
     def get_recipe_from_id(self, recipeId):
         endpoint = 'http://food2fork.com/api/get'
@@ -498,22 +563,6 @@ class SmartFridge():
             print(inst)
             return None
 
-    def get_ingredients(self, recipeId):
-        print('recipe id = {}'.format(recipeId))
-        response = ':disappointed: Sorry, no recipes found for your request. Please, try a new search'
-        if recipeId != None:
-            recipe = self.get_recipe_from_id(recipeId)
-            if recipe and 'recipe' in recipe:
-                ingredients=[]
-                source = '\nHere, you can find the *method of cooking*: {}'.format(recipe['recipe']['source_url'])
-                for ingredient in (recipe['recipe']['ingredients']):
-                    ingredients.append(ingredient)
-                    str_ingredients= '\nI found *{}*. To cook this you need the following *ingredients*:'.format(recipe['recipe']['title']) + \
-                                     '\n\n   - {}'.format('\n    - '.join(map(str, ingredients)))
-                response = str_ingredients + '\n' + source
-
-        return response
-
 
     def get_recipe_id(self, query, sortBy='r'):
         recipes=self.search_recipes(query, sortBy)
@@ -522,24 +571,17 @@ class SmartFridge():
         else:
             return None
 
-    def get_top_rated_recipe(self):
-        return self.get_ingredients(self.get_recipe_id(''))
 
 
     def get_top_rated_recipe_options(self, n_options=1):
         options = []
         recipes = self.search_recipes('')
-
         if recipes and 'recipes' in recipes:
             for recipe in recipes['recipes'][:n_options]:
                 options.append(recipe['title'])
                 self.option_dict[recipe['title']] = recipe['recipe_id']
-
         return options
 
-
-    def get_trending_recipe(self):
-        return self.get_ingredients(self.get_recipe_id('', 't'))
 
 
     def get_trending_recipe_options(self, n_options=1):
@@ -554,35 +596,18 @@ class SmartFridge():
         return options
 
 
-    def get_recipe_options_from_available_ingredients(self, n_options=2, n_ingredients=2):
-        ingredients = []
-        options = []
 
-        # IMPROVEMENT: add to the query the register user intolerances
-        ingredients = self.get_top_expired_ingredients_from_db(n_ingredients)
-
-        if len(ingredients) > 0:
-            query = ', '.join(map(str, ingredients))
-            recipes = self.search_recipes(query)
-
-        if recipes and 'recipes' in recipes:
-            for recipe in recipes['recipes'][:n_options]:
-                options.append(recipe['title'])
-                self.option_dict[recipe['title']]=recipe['recipe_id']
-
-        return options
 
 
     ######   POSTGRES DATABASE ########
 
-    def database_connection(self):
+    def database_connection(self, str_db_connection):
         print('Connecting to database ... ')
-
         # get a connection, if a connect cannot be made an exception will be raised here
-        db_conn = psycopg2.connect(DB_STRING_CONNECTION)
-
+        db_conn = psycopg2.connect(str_db_connection)
         # conn.cursor will return a cursor object, you can use this cursor to perform queries
         self.database_cursor = db_conn.cursor()
+
 
     def fetch_content(self, query):
         # execute Query
@@ -609,33 +634,22 @@ class SmartFridge():
 
         return ingredients
 
-    def get_ingredients_information(self, ingredients):
-        info = ""
+    def get_information_about_ingredients(self, ingredients):
         query = "SELECT name, expiration_date, quantity " \
                 "FROM products " \
                 "WHERE name like '%{}%'".format(ingredients)
-        try:
-            self.database_cursor.execute(query)
-            records = self.database_cursor.fetchall()
-            if len(records)>0:
-                for r in records:
-                    # Not expired product
-                    if r[1].date() >= datetime.datetime.now().date():
-                        info = info + '\n' + 'There are {0} grams of {1}, the expiration date is {2}'.\
-                            format(round(r[2], 0), r[0], r[1].strftime("%d/%m/%Y"))
-                    # Expired product
-                    else:
-                        info = info + '\n' + 'The {0} expired the day {1}. Throw out it!'.format(r[0],
-                                                                                                 r[1].strftime("%d/%m/%Y"))
-            else:
-                info = 'There are no {} left at home, write it down on the shopping list.'.format(ingredients)
-        except:
-            info = 'Sorry, we are having technical problems, please try again.'
 
-        return info
+        self.database_cursor.execute(query)
+        records = self.database_cursor.fetchall()
+
+        return records
+
+
+
 
 ######   MAIN ########
 if __name__ == "__main__":
+
     smartfridge=SmartFridge()
 
     if smartfridge.slack_client.rtm_connect():
