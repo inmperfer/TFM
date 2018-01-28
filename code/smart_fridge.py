@@ -379,7 +379,7 @@ class SmartFridge():
     def get_ingredients_information(self, ingredients):
         info = ""
         try:
-            records = self.get_information_about_ingredients(ingredients)
+            records = self.get_db_information_about_ingredients(ingredients)
             if len(records)>0:
                 for r in records:
                     # Not expired product
@@ -391,11 +391,13 @@ class SmartFridge():
                         info = info + '\n' + 'The {0} expired the day {1}. Throw out it!'.format(r[0],
                                                                                                  r[1].strftime("%d/%m/%Y"))
             else:
-                info = 'There are no {} left at home, write it down on the shopping list.'.format(ingredients)
+                info = 'There are no  {} left at home, write it down on the shopping list.'.format(ingredients)
         except:
             info = 'Sorry, we are having technical problems, please try again.'
 
         return info
+
+
 
     def get_top_rated_recipe(self):
         return self.get_ingredients(self.get_recipe_id(''))
@@ -634,7 +636,7 @@ class SmartFridge():
 
         return ingredients
 
-    def get_information_about_ingredients(self, ingredients):
+    def get_db_information_about_ingredients(self, ingredients):
         query = "SELECT name, expiration_date, quantity " \
                 "FROM products " \
                 "WHERE name like '%{}%'".format(ingredients)
