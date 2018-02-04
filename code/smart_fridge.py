@@ -103,12 +103,11 @@ class SmartFridge():
 
     ######   CONVERSATION MANAGEMENT ########
 
-    def handle_command(self, command, channel):
-        """
-            Receives commands directed at the bot and determines if they
-            are valid commands. If so, then acts on the commands. If not,
-            returns back what it needs for clarification.
-        """
+    # Receives commands directed at the bot and determines if they
+    # are valid commands. If so, then acts on the commands. If not,
+    # returns back what it needs for clarification.
+    def handle_command(self, command):
+
         response = "Not sure what you mean. Please reword your request"
 
         print('\n\nINPUT = {}\n'.format(command))
@@ -129,24 +128,27 @@ class SmartFridge():
 
             # A suggestion is provide to the user because the required information
             # is not provided by the user after several attempts
-            # YUM_SUGGEST
+            # $yum_sugest
             if(self.context['yum_sugest'] == 'true'):
                 self.send_response(response_text)
                 response = self.yum_suggestion()
 
+            # $suggest_dish
             elif(self.context['suggest_dish'] == 'true'):
                 self.send_response(response_text)
                 response = self.suggest_dish()
 
+            # $summary
             elif(self.context['summary'] == 'true'):
                 self.send_response(response_text)
                 response = self.get_db_summary()
 
+            # $search_recipe
             elif(self.context['search_recipe'] == 'true'):
                 self.send_response(response_text)
                 response = self.get_recipe()
 
-            # GET_RECIPE
+            # #get_recipe
             elif intent == 'get_recipe':
                 if(self.context['search_recipe'] == 'true'):
                     response = self.get_recipe()
@@ -155,7 +157,7 @@ class SmartFridge():
                 else:
                     response= response_text
 
-            # SUGGEST_DISH
+            # #suggest_dish
             elif intent=='sugest_dish':
                 if(self.context['suggest_dish'] == 'true'):
                     response = self.suggest_dish()
@@ -164,7 +166,7 @@ class SmartFridge():
                 else:
                     response = response_text
 
-            # AVAILABLE_INGREDIENTS
+            # #available_ingredients
             elif intent=='available_ingredients':
                 ingredients = self.context['ingredients']
                 if ingredients != None:
@@ -174,11 +176,11 @@ class SmartFridge():
                     self.send_response(response_text)
                     response = self.get_db_summary()
 
-            # AVAILABLE_INGREDIENTS
+            # #needed_ingredients
             elif intent == 'needed_ingredients':
                 response = response_text
 
-            # SELECT_OPTION
+            # #select_option
             elif intent == 'select_option':
                 option_response = self.select_option()
                 if option_response != '':
@@ -186,11 +188,11 @@ class SmartFridge():
                 else:
                     response = response_text
 
-            # NEGATIVE_REACTION
+            # #negative_reaction
             elif intent == 'negative_reaction':
                 response = response_text
 
-            # ANYTHING ELSE
+            # #anaything_else
             else:
                 response = response_text
 
@@ -256,8 +258,6 @@ class SmartFridge():
             response = ':disappointed: Sorry, no recipes found for your request. Please, try a new search'
         else:
             response = header + '\n' + response + '\n' + footer
-
-
         return response
 
 
@@ -659,7 +659,7 @@ if __name__ == "__main__":
         while True:
             command, channel = smartfridge.parse_slack_output(smartfridge.slack_client.rtm_read())
             if command and channel:
-                smartfridge.handle_command(command, channel)
+                smartfridge.handle_command(command)
             time.sleep(READ_WEBSOCKET_DELAY)
     else:
         print("Connection failed. Invalid Slack token or bot ID?")
