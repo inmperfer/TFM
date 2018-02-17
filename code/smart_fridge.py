@@ -332,7 +332,7 @@ class SmartFridge():
         else:
             recap= ':-1: You have the fridge EMPTY! :disappointed_relieved:' \
                     'Make the purchase if you do not want to starve. ' \
-                    'Today you will have to order food at home or go to your parents\' house :family:.'
+                    'Today you will have to order food at home.'
 
         return(header + recap + footer)
 
