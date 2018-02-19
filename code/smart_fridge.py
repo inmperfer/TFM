@@ -242,12 +242,15 @@ class SmartFridge():
             trending_options = []
 
             # n_recipes recipe suggestion by using the n_ingredients with closest expiration date and biggest quantity
-            available_ingredients_options = self.get_recipe_options_from_available_ingredients(n_options=2, n_ingredients=2)
+            available_ingredients_options = self.get_recipe_options_from_available_ingredients(n_options=2,
+                                                                                               n_ingredients=2)
 
-            top_rated_options = self.get_top_rated_recipe_options(n_options=((TOTAL_NUMBER_OPTIONS - len(available_ingredients_options)) // 2)
-                                                                            + ((TOTAL_NUMBER_OPTIONS - len(available_ingredients_options)) % 2))
+            top_rated_options = self.get_top_rated_recipe_options\
+                (n_options=((TOTAL_NUMBER_OPTIONS - len(available_ingredients_options)) // 2)
+                           + ((TOTAL_NUMBER_OPTIONS - len(available_ingredients_options)) % 2))
 
-            trending_options = self.get_trending_recipe_options(n_options=((TOTAL_NUMBER_OPTIONS - len(available_ingredients_options)) // 2))
+            trending_options = self.get_trending_recipe_options(
+                n_options=((TOTAL_NUMBER_OPTIONS - len(available_ingredients_options)) // 2))
 
             self.recipe_options = available_ingredients_options + top_rated_options + trending_options
             print(self.recipe_options)
@@ -315,19 +318,23 @@ class SmartFridge():
         products_to_expire= self.fetch_content(query_to_expire)
 
         if len(all_products)>0:
-            header = '\n\nThere are {0} products in total, {1} products are already expired and {2} products will expire soon. '.\
+            header = '\n\nThere are {0} products in total, ' \
+                     '{1} products are already expired and {2} products will expire soon. '.\
                             format(len(all_products), len(expired_products), len(products_to_expire))
 
             if(len(expired_products)>0):
                 footer = '\n\nThrow out the expired foods. '
-                recap = recap + '\n\n' + ':recycle: *Already expired*:  {0}.'.format(', '.join(map(str, expired_products)))
+                recap = recap + '\n\n' + ':recycle: *Already expired*:  {0}.'\
+                    .format(', '.join(map(str, expired_products)))
             else:
                 recap = recap + '\n\n' + 'Great! :clap: There are no expired products.'
             if(len(products_to_expire)>0):
                 footer = footer + 'Consider using the foods to expire as soon as possible.'
-                recap = recap + '\n\n' + ':alarm_clock: *To expire*:  {0}.'.format(', '.join(map(str, products_to_expire)))
+                recap = recap + '\n\n' + ':alarm_clock: *To expire*:  {0}.'\
+                    .format(', '.join(map(str, products_to_expire)))
             else:
-                recap = recap + '\n\n' + 'Congrats! :v: There are no products to expire in the next {0} days.'.format(DAYS_TO_EXPIRE)
+                recap = recap + '\n\n' + 'Congrats! :v: There are no products to expire in the next {0} days.'\
+                    .format(DAYS_TO_EXPIRE)
 
         else:
             recap= ':-1: You have the fridge EMPTY! :disappointed_relieved:' \
@@ -340,7 +347,8 @@ class SmartFridge():
     def image_food_recognition(self):
         food, score = self.get_food_from_image('./download/food.jpg')
         if (food != 'non-food'):
-            response = 'Uhm... :yum: :yum: :yum: This looks really good. I think (score: {1}) it is... *{0}*'.format(food, score)
+            response = 'Uhm... :yum: :yum: :yum: This looks really good. I think (score: {1}) it is... *{0}*'\
+                .format(food, score)
             self.send_response(response)
             response = '\n' + smartfridge.get_ingredients(self.get_recipe_id(food))
         else:
@@ -368,7 +376,8 @@ class SmartFridge():
                 source = '\nHere, you can find the *method of cooking*: {}'.format(recipe['recipe']['source_url'])
                 for ingredient in (recipe['recipe']['ingredients']):
                     ingredients.append(ingredient)
-                    str_ingredients= '\nI found *{}*. To cook this you need the following *ingredients*:'.format(recipe['recipe']['title']) + \
+                    str_ingredients= '\nI found *{}*. To cook this you need the following *ingredients*:'\
+                                         .format(recipe['recipe']['title']) + \
                                      '\n\n   - {}'.format('\n    - '.join(map(str, ingredients)))
                 response = str_ingredients + '\n' + source
 
@@ -388,8 +397,8 @@ class SmartFridge():
                             format(round(r[2], 0), r[0], r[1].strftime("%d/%m/%Y"))
                     # Expired product
                     else:
-                        info = info + '\n' + 'The {0} expired the day {1}. Throw out it!'.format(r[0],
-                                                                                                 r[1].strftime("%d/%m/%Y"))
+                        info = info + '\n' + 'The {0} expired the day {1}. Throw out it!'\
+                            .format(r[0], r[1].strftime("%d/%m/%Y"))
             else:
                 info = 'There are no  {} left at home, write it down on the shopping list.'.format(ingredients)
         except:
