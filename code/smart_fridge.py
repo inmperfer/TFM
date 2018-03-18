@@ -658,7 +658,7 @@ class SmartFridge():
 
 
 
-######   MAIN ########
+
 if __name__ == "__main__":
 
     smartfridge=SmartFridge()
@@ -672,3 +672,7 @@ if __name__ == "__main__":
             time.sleep(READ_WEBSOCKET_DELAY)
     else:
         print("Connection failed. Invalid Slack token or bot ID?")
+
+
+
+
