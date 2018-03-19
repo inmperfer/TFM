@@ -323,7 +323,7 @@ class SmartFridge():
                             format(len(all_products), len(expired_products), len(products_to_expire))
 
             if(len(expired_products)>0):
-                footer = '\n\nThrow out the expired foods. '
+                footer = '\n\nThrow the expired foods out. '
                 recap = recap + '\n\n' + ':recycle: *Already expired*:  {0}.'\
                     .format(', '.join(map(str, expired_products)))
             else:
@@ -397,7 +397,7 @@ class SmartFridge():
                             format(round(r[2], 0), r[0], r[1].strftime("%d/%m/%Y"))
                     # Expired product
                     else:
-                        info = info + '\n' + 'The {0} expired the day {1}. Throw out it!'\
+                        info = info + '\n' + 'The {0} expired the day {1}. Throw it out!'\
                             .format(r[0], r[1].strftime("%d/%m/%Y"))
             else:
                 info = 'There are no  {} left at home, write it down on the shopping list.'.format(ingredients)
